@@ -1,0 +1,17 @@
+Name,year,subjects,recordings,scoring,age range,gender (m/f),BMI
+ABC,2011-2014,49,132,AASM,27-65 (48.8 pm 9.9),28/21,38.9 pm 3.0
+ANPHY,2024,29,29,AASM,32 pm 6,16/13,<30 (exclusion criteria)
+APOE,2003-2007,712,712,R&K,13-90 (45.7 pm 13.6),421/291,27.3 pm 7.0
+APPLES,2003-2008,1516,1104,R&K,18-84 (50.1 pm 12.9),958/558,32.1 pm 7.8
+BESTAIR,2011-2014,169,518,"AASM (home sleep test, not reliable)",46-77 (64.3 pm 7.4),110/59,31.7 pm 5.9
+CAPSLPDB,2012,108,108,R&K,14-82 (49.2 pm 19.7),66/42,-
+CCSHS,2006-2010,517,515,AASM,16-19 (17.7 pm 0.4),261/256,25.1 pm 5.9
+CFS,1990-2006,735,730,R&K,7-89 (43.3 pm 19.9),329/406,32.4 pm 9.5
+CHAT,2007-2012,464,1639,AASM,5-10.5 (7.3 pm 1.4),219/234,19.0 pm 4.9
+CPS,2021-2022,113,113,AASM,"71% of participants are >50, age not known for all participants",45/17 (gender info is not available for all patients),"42% of participants are >30, BMI not known for all participants"
+DCSM,2015-2018,255,255,AASM,-,-,-
+DOD-H,2020,25,25,AASM,35.3 pm 7.5,16/9,23.8 pm 3.4
+DOD-O,2020,55,56,AASM,45.6 pm 16.5,35/20,29.6 pm 6.4
+DREAMT,2022,100,100,AASM,56 pm 17,45/55,33.7 pm 8.6
+EESM17,2017,9,9,AASM,26-44,6/3,-
+EESM19,2019,20,80,"AASM (80/200 have full PSG, therefore only those have scoring)",23-36 (mean 25.9),7/13,-
