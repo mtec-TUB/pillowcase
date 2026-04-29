@@ -43,6 +43,17 @@
       gap: 0.4rem;
     }
     .nav-logo .dot { width: 8px; height: 8px; background: #0066ff; border-radius: 50%; }
+    .nav-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+    .nav-subtitle {
+      font-size: 0.68rem;
+      color: #9ca3af;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
     .nav-spacer { flex: 1; }
     .nav-btn {
       display: flex; align-items: center; gap: 0.4rem;
@@ -127,34 +138,24 @@
       box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px #e2e4e9;
     }
 
-    /* ADD ROW PANEL */
-    .add-panel {
-      background: #fff;
-      border: 1px solid #e2e4e9;
+    /* EMPTY STATE */
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: #9ca3af;
       border-radius: 10px;
-      padding: 1.2rem 1.5rem;
-      display: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border: 2px dashed #e2e4e9;
+      background: #fff;
     }
-    .add-panel.open { display: block; }
-    .add-panel h3 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.9rem; color: #555; }
-    .add-form { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: flex-end; }
-    .add-field { display: flex; flex-direction: column; gap: 0.25rem; }
-    .add-field label { font-size: 0.68rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; }
-    .add-field input, .add-field select {
-      padding: 0.4rem 0.65rem;
-      border: 1px solid #e2e4e9;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      outline: none;
-      background: #f9fafb;
-      color: #1a1a2e;
-      width: 140px;
-      transition: border 0.12s;
-    }
-    .add-field input:focus, .add-field select:focus { border-color: #0066ff; background: #fff; }
+    .empty-state svg { opacity: 0.4; }
+    .empty-state p { font-size: 0.9rem; }
+    .empty-state button { margin-top: 0.25rem; }
 
-    /* IMPORT MODAL */
+    /* OVERLAY / MODALS */
     .overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.4); z-index: 200;
@@ -168,20 +169,6 @@
     }
     .modal h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
     .modal p { font-size: 0.82rem; color: #6b7280; margin-bottom: 1.2rem; }
-    .drop-zone {
-      border: 2px dashed #d1d5db; border-radius: 8px;
-      padding: 1.8rem; text-align: center; cursor: pointer;
-      transition: all 0.15s; background: #f9fafb;
-    }
-    .drop-zone:hover, .drop-zone.over { border-color: #0066ff; background: #f0f6ff; }
-    .drop-zone p { font-size: 0.8rem; color: #9ca3af; margin-top: 0.5rem; }
-    textarea.csv-paste {
-      width: 100%; height: 90px; margin-top: 0.8rem;
-      border: 1px solid #e2e4e9; border-radius: 6px;
-      padding: 0.5rem; font-size: 0.75rem;
-      font-family: 'SFMono-Regular', Consolas, monospace;
-      resize: vertical; outline: none; background: #f9fafb;
-    }
     .modal-footer { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1.2rem; }
 
     /* TOAST */
@@ -215,28 +202,30 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo"><div class="dot"></div> PillowCase</div>
+  <div class="nav-logo">
+    <div class="dot"></div>
+    <div class="nav-brand">
+      <span>PillowCase</span>
+      <span class="nav-subtitle">A catalogue of sleep study datasets</span>
+    </div>
+  </div>
   <div class="nav-spacer"></div>
-  <button class="nav-btn" onclick="document.getElementById('add-panel').classList.toggle('open')">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    Add Row
-  </button>
-  <button class="nav-btn" onclick="openImport()">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    Import CSV
-  </button>
-  <button class="nav-btn" onclick="exportCSV()">
+  <button class="nav-btn" id="export-btn" onclick="exportCSV()" style="display:none">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 16 12 21 17 16"/><line x1="12" y1="21" x2="12" y2="9"/></svg>
-    Export CSV
+    Export
   </button>
-  <button class="nav-btn primary" onclick="openColManager()">
+  <button class="nav-btn" id="row-mgr-btn" onclick="openRowManager()" style="display:none">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="17" width="18" height="4" rx="1"/></svg>
+    Manage Rows
+  </button>
+  <button class="nav-btn" id="col-mgr-btn" onclick="openColManager()" style="display:none">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
     Manage Columns
   </button>
 </nav>
 
 <!-- TOOLBAR -->
-<div class="toolbar">
+<div class="toolbar" id="toolbar" style="display:none">
   <div class="search-box">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input id="search-input" type="text" placeholder="Quick filter all columns…" oninput="gridApi.setGridOption('quickFilterText', this.value)"/>
@@ -249,13 +238,18 @@
 
 <!-- GRID AREA -->
 <div class="grid-wrap">
-  <!-- ADD ROW PANEL -->
-  <div class="add-panel" id="add-panel">
-    <h3>New row</h3>
-    <div class="add-form" id="add-form"></div>
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="12" y1="18" x2="12" y2="12"/>
+      <line x1="9" y1="15" x2="15" y2="15"/>
+    </svg>
+    <p>Loading <strong>Datasets_Catalogue.csv</strong>…</p>
   </div>
 
-  <div id="myGrid" class="ag-theme-quartz"></div>
+  <div id="myGrid" class="ag-theme-quartz" style="display:none; flex:1;"></div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -273,72 +267,106 @@
   </div>
 </div>
 
-<script>
-// ── SAMPLE DATA ───────────────────────────────────────────
-const SAMPLE_CSV = `ID,Product,Category,Revenue,Units Sold,Region,Status,Launch Date,Rating
-1,Apex Pro X1,Electronics,142500,950,North America,Active,2023-03-12,4.7
-2,BrewMaster 3000,Kitchen,67800,1420,Europe,Active,2022-11-05,4.5
-3,CloudDesk v2,Software,320000,850,Global,Active,2024-01-20,4.9
-4,DriftBoard 9,Sports,48900,320,Asia Pacific,Discontinued,2021-06-30,3.8
-5,EcoWrap Lite,Packaging,22300,5600,North America,Active,2023-08-14,4.2
-6,FusionLens 400,Photography,198000,440,Europe,Active,2024-02-28,4.8
-7,GreenTrace Pro,Software,88500,1100,Global,Beta,2024-04-10,4.3
-8,HydroKlean X,Home,31200,2800,North America,Active,2022-07-22,4.0
-9,InfraCore 7,Enterprise,512000,210,Global,Active,2023-10-01,4.6
-10,JetPack Mini,Travel,76400,680,Asia Pacific,Active,2023-05-18,4.4
-11,KinetiFlow 2,Fitness,29700,3300,Europe,Active,2022-12-09,4.1
-12,LuminAura S,Lighting,54600,1650,North America,Discontinued,2021-03-25,3.5
-13,MeshGuard Pro,Security,163000,720,Global,Active,2024-03-15,4.7
-14,NovaScan 100,Healthcare,285000,390,North America,Beta,2024-05-01,4.5
-15,OmniTrack GPS,Automotive,97200,810,Europe,Active,2023-09-27,4.3
-16,PulseCharge X,Electronics,119000,1240,Asia Pacific,Active,2024-01-08,4.6
-17,QuikPress 5,Kitchen,41300,2100,North America,Active,2022-08-30,3.9
-18,RoboVac Elite,Home,228000,960,Global,Active,2023-07-14,4.8
-19,SolarCell 12,Energy,374000,580,Europe,Active,2024-02-11,4.9
-20,TerraSense XL,Agriculture,56700,430,Asia Pacific,Beta,2024-04-22,4.2
-21,UltraGrip 3,Sports,18900,1820,North America,Active,2023-02-16,4.0
-22,VaultKey Pro,Security,142000,1050,Global,Active,2023-11-30,4.5
-23,WaveCast 4K,Media,89300,760,Europe,Active,2024-01-25,4.4
-24,XeroCell Nano,Electronics,67100,1380,Asia Pacific,Active,2023-06-08,4.2
-25,YieldMax AI,Software,431000,670,Global,Active,2024-03-28,4.8
-26,ZenPad Ultra,Tablets,178000,920,North America,Active,2024-02-02,4.6`;
+<!-- ROW MANAGER MODAL -->
+<div class="overlay" id="row-overlay">
+  <div class="modal" style="width:600px;">
+    <h2>Manage Rows</h2>
+    <p>Rows removed with ✕ appear here. Check to restore them to the grid.</p>
+    <div id="row-manager-search" style="margin-bottom:0.6rem;">
+      <div class="search-box" style="flex:1;max-width:100%;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search removed rows…" oninput="filterRemovedRows(this.value)" style="width:100%;"/>
+      </div>
+    </div>
+    <div id="row-manager-list" style="display:flex;flex-direction:column;gap:0.4rem;max-height:340px;overflow-y:auto;margin-top:0.5rem;"></div>
+    <div id="row-manager-empty" style="display:none;text-align:center;padding:2rem;color:#9ca3af;font-size:0.82rem;">No removed rows yet. Use ✕ on a row to remove it.</div>
+    <div class="modal-footer">
+      <button class="nav-btn" onclick="document.getElementById('row-overlay').classList.remove('open')">Close</button>
+      <button class="nav-btn primary" onclick="restoreAllRows()">Restore All</button>
+    </div>
+  </div>
+</div>
 
+<script>
 // ── STATE ─────────────────────────────────────────────────
 let gridApi;
 let columnDefs = [];
 let rowIdCounter = 1000;
+let currentHeaders = [];
+let removedRows = []; // track rows removed via ✕
 
-// ── CSV PARSER ────────────────────────────────────────────
+// ── CSV PARSER (RFC 4180 — handles quoted fields with commas/newlines) ────
+function detectDelimiter(text) {
+  const firstLine = text.split(/\r?\n/)[0];
+  const semicolons = (firstLine.match(/;/g) || []).length;
+  const commas = (firstLine.match(/,/g) || []).length;
+  const tabs = (firstLine.match(/\t/g) || []).length;
+  if (semicolons >= commas && semicolons >= tabs) return ';';
+  if (tabs > commas) return '\t';
+  return ',';
+}
+
+// Splits a single CSV line respecting double-quoted fields.
+function splitLine(line, delim) {
+  const fields = [];
+  let cur = '';
+  let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQ) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') { cur += '"'; i++; } // escaped quote
+        else inQ = false;
+      } else {
+        cur += ch;
+      }
+    } else {
+      if (ch === '"') { inQ = true; }
+      else if (ch === delim) { fields.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+  }
+  fields.push(cur.trim());
+  return fields;
+}
+
 function parseCSV(text) {
-  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
-  const headers = lines[0].split(',').map(h => h.trim());
-  const rows = lines.slice(1).map(line => {
-    const vals = line.split(',');
+  const delim = detectDelimiter(text);
+  // Reassemble lines while respecting quoted newlines
+  const rawLines = [];
+  let buf = '';
+  let inQ = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '"') { inQ = !inQ; buf += ch; }
+    else if (!inQ && (ch === '\n' || (ch === '\r' && text[i+1] === '\n'))) {
+      if (ch === '\r') i++; // skip \n of \r\n
+      if (buf.trim()) rawLines.push(buf);
+      buf = '';
+    } else { buf += ch; }
+  }
+  if (buf.trim()) rawLines.push(buf);
+
+  const headers = splitLine(rawLines[0], delim);
+  const rows = rawLines.slice(1).map(line => {
+    const vals = splitLine(line, delim);
     const row = { _rowId: ++rowIdCounter };
-    headers.forEach((h, i) => row[h] = (vals[i] || '').trim());
+    headers.forEach((h, i) => { row[h] = vals[i] !== undefined ? vals[i] : ''; });
     return row;
   });
   return { headers, rows };
 }
 
 function inferType(key, rows) {
-  const nums = ['Revenue', 'Units Sold', 'Rating', 'ID', 'Price', 'Score', 'Count', 'Amount'];
-  if (nums.some(n => key.toLowerCase().includes(n.toLowerCase()))) return 'number';
-  const sample = rows.slice(0, 5).map(r => r[key]).filter(Boolean);
-  if (sample.every(v => !isNaN(+v))) return 'number';
+  const sample = rows.slice(0, 10).map(r => r[key]).filter(v => v !== '' && v != null);
+  if (sample.length === 0) return 'text';
+  if (sample.every(v => !isNaN(+v) && v !== '')) return 'number';
   return 'text';
 }
 
 // ── COLUMN BUILDERS ───────────────────────────────────────
-const STATUS_STYLES = {
-  Active: 'background:#dcfce7;color:#15803d;border:1px solid #bbf7d0',
-  Discontinued: 'background:#fee2e2;color:#b91c1c;border:1px solid #fecaca',
-  Beta: 'background:#fef9c3;color:#854d0e;border:1px solid #fde047',
-  Legacy: 'background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb'
-};
-
 function buildColDefs(headers, rows) {
-  return headers.map(h => {
+  return headers.map((h, idx) => {
     const type = inferType(h, rows);
     const base = {
       field: h,
@@ -347,6 +375,8 @@ function buildColDefs(headers, rows) {
       filter: true,
       resizable: true,
       minWidth: 100,
+      // Pin the first column (Name) to the left
+      ...(idx === 0 ? { pinned: 'left', minWidth: 140 } : {}),
     };
     if (type === 'number') {
       Object.assign(base, {
@@ -354,18 +384,9 @@ function buildColDefs(headers, rows) {
         filter: 'agNumberColumnFilter',
         valueFormatter: p => {
           if (p.value == null || p.value === '') return '—';
-          if (h === 'Revenue') return '$' + Number(p.value).toLocaleString();
-          if (h === 'Rating') return '★ ' + p.value;
           return Number(p.value).toLocaleString();
         }
       });
-    }
-    if (h === 'Status') {
-      base.cellRenderer = p => {
-        if (!p.value) return '—';
-        const s = STATUS_STYLES[p.value] || STATUS_STYLES.Legacy;
-        return `<span style="${s};padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;">${p.value}</span>`;
-      };
     }
     return base;
   });
@@ -374,16 +395,61 @@ function buildColDefs(headers, rows) {
 // ── LOAD DATA ─────────────────────────────────────────────
 function loadData(csvText) {
   const { headers, rows } = parseCSV(csvText);
+  currentHeaders = headers;
   columnDefs = buildColDefs(headers, rows);
 
+  // Show grid, hide empty state
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('myGrid').style.display = '';
+  document.getElementById('toolbar').style.display = '';
+  document.getElementById('export-btn').style.display = '';
+  document.getElementById('row-mgr-btn').style.display = '';
+  document.getElementById('col-mgr-btn').style.display = '';
+
   if (gridApi) {
-    gridApi.setGridOption('columnDefs', columnDefs);
+    // Grid already exists — update it
+    const allColDefs = [
+      ...columnDefs,
+      actionsColDef(),
+    ];
+    gridApi.setGridOption('columnDefs', allColDefs);
     gridApi.setGridOption('rowData', rows);
     renderChips(headers);
-    buildAddForm(headers, rows);
     updateStats();
     showToast(`Loaded ${rows.length} rows · ${headers.length} columns`);
+  } else {
+    // First load — init grid
+    initGrid(headers, rows);
   }
+}
+
+// ── ACTIONS COLUMN DEF ────────────────────────────────────
+function actionsColDef() {
+  return {
+    headerName: '',
+    field: '_actions',
+    width: 52,
+    minWidth: 52,
+    maxWidth: 52,
+    sortable: false,
+    filter: false,
+    resizable: false,
+    suppressMovable: true,
+    cellRenderer: p => {
+      const btn = document.createElement('button');
+      btn.innerHTML = '✕';
+      btn.style.cssText = 'background:none;border:none;cursor:pointer;color:#d1d5db;font-size:13px;padding:2px 4px;border-radius:4px;transition:color .12s';
+      btn.onmouseover = () => btn.style.color = '#ef4444';
+      btn.onmouseleave = () => btn.style.color = '#d1d5db';
+      btn.onclick = () => {
+        removedRows.push({ ...p.data });
+        gridApi.applyTransaction({ remove: [p.data] });
+        updateStats();
+        showToast('Row removed — restore via Manage Rows');
+      };
+      return btn;
+    }
+  };
 }
 
 // ── CHIP TOGGLES ──────────────────────────────────────────
@@ -397,7 +463,7 @@ function renderChips(headers) {
 
   const wrap = document.getElementById('col-chips');
   wrap.innerHTML = list.map(c => `
-    <div class="col-chip ${c.visible ? 'on' : ''}" id="chip-${CSS.escape(c.id)}" onclick="toggleColumn('${c.id}')">
+    <div class="col-chip ${c.visible ? 'on' : ''}" id="chip-${CSS.escape(c.id)}" onclick="toggleColumn('${c.id.replace(/'/g, "\\'")}')">
       <span class="chip-dot"></span>${c.label}
     </div>`).join('');
 }
@@ -417,67 +483,96 @@ function updateStats() {
   if (!gridApi) return;
   const displayed = gridApi.getDisplayedRowCount();
   const total = gridApi.getGridOption('rowData')?.length || 0;
-  const visibleCols = gridApi.getAllDisplayedColumns().length;
-  const totalCols = columnDefs.length;
+  const visibleCols = gridApi.getAllDisplayedColumns().filter(c => c.getColId() !== '_actions').length;
+  const totalCols = currentHeaders.length;
   document.getElementById('stats-label').innerHTML =
     `<strong>${displayed}</strong> of ${total} rows &nbsp;·&nbsp; <strong>${visibleCols}</strong> of ${totalCols} columns`;
 }
 
-// ── ADD ROW ───────────────────────────────────────────────
-function buildAddForm(headers, rows) {
-  const types = {};
-  headers.forEach(h => types[h] = inferType(h, rows));
-  document.getElementById('add-form').innerHTML = headers.map(h => `
-    <div class="add-field">
-      <label>${h}</label>
-      <input id="nf-${h}" type="${types[h]==='number'?'number':'text'}" placeholder="${h}"/>
-    </div>`).join('') + `
-    <div class="add-field" style="justify-content:flex-end;padding-bottom:1px;">
-      <button class="nav-btn primary" onclick="submitRow()">Add</button>
-    </div>`;
+// ── ROW MANAGER ───────────────────────────────────────────
+let rowManagerFilter = '';
+
+function openRowManager() {
+  renderRowManagerList();
+  document.getElementById('row-overlay').classList.add('open');
 }
 
-function submitRow() {
-  const cols = gridApi.getColumnDefs();
-  const row = { _rowId: ++rowIdCounter };
-  cols.forEach(c => {
-    const el = document.getElementById(`nf-${c.field}`);
-    if (el) row[c.field] = el.value;
+function filterRemovedRows(val) {
+  rowManagerFilter = val.toLowerCase();
+  renderRowManagerList();
+}
+
+function renderRowManagerList() {
+  const list = document.getElementById('row-manager-list');
+  const empty = document.getElementById('row-manager-empty');
+  const filtered = removedRows.filter(row => {
+    if (!rowManagerFilter) return true;
+    return Object.values(row).some(v => String(v).toLowerCase().includes(rowManagerFilter));
   });
-  gridApi.applyTransaction({ add: [row], addIndex: 0 });
-  document.getElementById('add-panel').classList.remove('open');
+
+  if (removedRows.length === 0) {
+    list.innerHTML = '';
+    list.style.display = 'none';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  list.style.display = 'flex';
+
+  // Show first two header values as a label
+  list.innerHTML = filtered.map((row, idx) => {
+    const realIdx = removedRows.indexOf(row);
+    const preview = currentHeaders.slice(0, 2).map(h => row[h] || '—').join(' · ');
+    const escapedPreview = preview.replace(/</g, '&lt;');
+    return `<label style="display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0.75rem;background:#fff8f8;border:1px solid #fde8e8;border-radius:6px;cursor:pointer;">
+      <input type="checkbox" onchange="toggleRestoreRow(${realIdx}, this.checked)" style="width:15px;height:15px;cursor:pointer;accent-color:#0066ff;"/>
+      <span style="font-size:0.82rem;color:#444;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escapedPreview}">${escapedPreview}</span>
+      <button onclick="restoreSingleRow(${realIdx})" style="background:#0066ff;color:#fff;border:none;border-radius:5px;padding:0.25rem 0.6rem;font-size:0.72rem;cursor:pointer;white-space:nowrap;">Restore</button>
+    </label>`;
+  }).join('');
+}
+
+function toggleRestoreRow(idx, checked) {
+  // reserved for bulk-restore if needed
+}
+
+function restoreSingleRow(idx) {
+  const row = removedRows[idx];
+  if (!row) return;
+  gridApi.applyTransaction({ add: [row] });
+  removedRows.splice(idx, 1);
   updateStats();
-  showToast('Row added');
+  showToast('Row restored');
+  renderRowManagerList();
 }
 
-// ── IMPORT ────────────────────────────────────────────────
-function openImport() { document.getElementById('import-overlay').classList.add('open'); }
-function closeImport() { document.getElementById('import-overlay').classList.remove('open'); }
+function restoreAllRows() {
+  if (removedRows.length === 0) return;
+  gridApi.applyTransaction({ add: [...removedRows] });
+  removedRows = [];
+  updateStats();
+  showToast('All rows restored');
+  renderRowManagerList();
+}
 
-function handleFileUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const r = new FileReader();
-  r.onload = ev => { loadData(ev.target.result); closeImport(); };
-  r.readAsText(file);
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('drop-zone').classList.remove('over');
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
-  const r = new FileReader();
-  r.onload = ev => { loadData(ev.target.result); closeImport(); };
-  r.readAsText(file);
-}
-function importPaste() {
-  const txt = document.getElementById('csv-paste').value.trim();
-  if (txt) { loadData(txt); closeImport(); }
+// ── EMBEDDED CSV DATA (Datasets_Catalogue.csv) ────────────
+const EMBEDDED_CSV = `Name,year,subjects,recordings,scoring,age range,gender (m/f),BMI\r\nABC,2011-2014,49,132,AASM,27-65 (48.8 pm 9.9),28/21,38.9 pm 3.0\r\nANPHY,2024,29,29,AASM,32 pm 6,16/13,<30 (exclusion criteria)\r\nAPOE,2003-2007,712,712,R&K,13-90 (45.7 pm 13.6),421/291,27.3 pm 7.0\r\nAPPLES,2003-2008,1516,1104,R&K,18-84 (50.1 pm 12.9),958/558,32.1 pm 7.8\r\nBESTAIR,2011-2014,169,518,"AASM (home sleep test, not reliable)",46-77 (64.3 pm 7.4),110/59,31.7 pm 5.9\r\nCAPSLPDB,2012,108,108,R&K,14-82 (49.2 pm 19.7),66/42,-\r\nCCSHS,2006-2010,517,515,AASM,16-19 (17.7 pm 0.4),261/256,25.1 pm 5.9\r\nCFS,1990-2006,735,730,R&K,7-89 (43.3 pm 19.9),329/406,32.4 pm 9.5\r\nCHAT,2007-2012,464,1639,AASM,5-10.5 (7.3 pm 1.4),219/234,19.0 pm 4.9\r\nCPS,2021-2022,113,113,AASM,"71% of participants are >50, age not known for all participants",45/17 (gender info is not available for all patients),"42% of participants are >30, BMI not known for all participants"\r\nDCSM,2015-2018,255,255,AASM,-,-,-\r\nDOD-H,2020,25,25,AASM,35.3 pm 7.5,16/9,23.8 pm 3.4\r\nDOD-O,2020,55,56,AASM,45.6 pm 16.5,35/20,29.6 pm 6.4\r\nDREAMT,2022,100,100,AASM,56 pm 17,45/55,33.7 pm 8.6\r\nEESM17,2017,9,9,AASM,26-44,6/3,-\r\nEESM19,2019,20,80,"AASM (80/200 have full PSG, therefore only those have scoring)",23-36 (mean 25.9),7/13,-`;
+
+async function autoLoadCSV() {
+  try {
+    const resp = await fetch('Datasets_Catalogue.csv');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    loadData(text);
+  } catch (_) {
+    // fetch blocked (local file://) or file not found — use embedded fallback
+    loadData(EMBEDDED_CSV);
+  }
 }
 
 // ── EXPORT ────────────────────────────────────────────────
 function exportCSV() {
-  gridApi.exportDataAsCsv({ fileName: 'table-export.csv' });
+  gridApi.exportDataAsCsv({ fileName: 'pillowcase.csv' });
   showToast('CSV exported');
 }
 
@@ -497,8 +592,10 @@ function openColManager() {
   list.innerHTML = cols.map(col => {
     const id = col.getColId();
     const visible = col.isVisible();
+    // escape id for use in JS string attribute
+    const escapedId = id.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
     return `<label style="display:flex;align-items:center;gap:0.65rem;padding:0.5rem 0.75rem;background:#f9fafb;border:1px solid #e2e4e9;border-radius:6px;cursor:pointer;">
-      <input type="checkbox" ${visible ? 'checked' : ''} onchange="gridApi.setColumnsVisible(['${id}'], this.checked); renderChips(null); updateStats();" style="width:15px;height:15px;cursor:pointer;accent-color:#0066ff;"/>
+      <input type="checkbox" ${visible ? 'checked' : ''} onchange="gridApi.setColumnsVisible(['${escapedId}'], this.checked); renderChips(null); updateStats();" style="width:15px;height:15px;cursor:pointer;accent-color:#0066ff;"/>
       <span style="font-size:0.82rem;">${col.getColDef().headerName || id}</span>
     </label>`;
   }).join('');
@@ -514,37 +611,11 @@ function showAllColumns() {
 }
 
 // ── INIT AG GRID ──────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const { headers, rows } = parseCSV(SAMPLE_CSV);
-  columnDefs = buildColDefs(headers, rows);
-
+function initGrid(headers, rows) {
   const gridOptions = {
     columnDefs: [
       ...columnDefs,
-      {
-        headerName: '',
-        field: '_actions',
-        width: 52,
-        minWidth: 52,
-        maxWidth: 52,
-        sortable: false,
-        filter: false,
-        resizable: false,
-        suppressMovable: true,
-        cellRenderer: p => {
-          const btn = document.createElement('button');
-          btn.innerHTML = '✕';
-          btn.style.cssText = 'background:none;border:none;cursor:pointer;color:#d1d5db;font-size:13px;padding:2px 4px;border-radius:4px;transition:color .12s';
-          btn.onmouseover = () => btn.style.color = '#ef4444';
-          btn.onmouseleave = () => btn.style.color = '#d1d5db';
-          btn.onclick = () => {
-            gridApi.applyTransaction({ remove: [p.data] });
-            updateStats();
-            showToast('Row removed');
-          };
-          return btn;
-        }
-      }
+      actionsColDef(),
     ],
     rowData: rows,
     defaultColDef: {
@@ -563,7 +634,6 @@ document.addEventListener('DOMContentLoaded', () => {
     onGridReady: params => {
       gridApi = params.api;
       renderChips(headers);
-      buildAddForm(headers, rows);
       updateStats();
     },
     onFilterChanged: updateStats,
@@ -572,13 +642,19 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   agGrid.createGrid(document.getElementById('myGrid'), gridOptions);
+}
 
+// ── BOOT ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
   // close modals on backdrop click
-  ['import-overlay', 'col-overlay'].forEach(id => {
+  ['col-overlay', 'row-overlay'].forEach(id => {
     document.getElementById(id).addEventListener('click', e => {
       if (e.target.id === id) e.target.classList.remove('open');
     });
   });
+
+  // Auto-load the hard-coded CSV
+  autoLoadCSV();
 });
 </script>
 </body>
