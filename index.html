@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DataGrid — AG Grid Quartz</title>
+  <title>PillowCase</title>
 
   <!-- AG Grid Community -->
   <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.2/dist/ag-grid-community.min.js"></script>
@@ -215,7 +215,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo"><div class="dot"></div> DataGrid</div>
+  <div class="nav-logo"><div class="dot"></div> PillowCase</div>
   <div class="nav-spacer"></div>
   <button class="nav-btn" onclick="document.getElementById('add-panel').classList.toggle('open')">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -256,28 +256,6 @@
   </div>
 
   <div id="myGrid" class="ag-theme-quartz"></div>
-</div>
-
-<!-- IMPORT MODAL -->
-<div class="overlay" id="import-overlay">
-  <div class="modal">
-    <h2>Import CSV</h2>
-    <p>Upload a .csv file or paste CSV text below. The first row is treated as column headers.</p>
-    <div class="drop-zone" id="drop-zone"
-      onclick="document.getElementById('file-input').click()"
-      ondragover="event.preventDefault();this.classList.add('over')"
-      ondragleave="this.classList.remove('over')"
-      ondrop="handleDrop(event)">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <p>Click or drag & drop a .csv file</p>
-    </div>
-    <input type="file" id="file-input" accept=".csv" style="display:none" onchange="handleFileUpload(event)"/>
-    <textarea class="csv-paste" id="csv-paste" placeholder="Or paste CSV here…&#10;name,score,region&#10;Alice,92,West"></textarea>
-    <div class="modal-footer">
-      <button class="nav-btn" onclick="closeImport()">Cancel</button>
-      <button class="nav-btn primary" onclick="importPaste()">Import</button>
-    </div>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
