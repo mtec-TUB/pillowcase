@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DataGrid — Dynamic Table Explorer</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f7f5f0;
+      --surface: #ffffff;
+      --surface2: #f0ede6;
+      --ink: #1a1814;
+      --ink2: #5a5650;
+      --ink3: #9a9590;
+      --accent: #c84b2f;
+      --accent2: #e8a87c;
+      --border: #dedad2;
+      --border2: #ccc8be;
+      --header-bg: #1a1814;
+      --header-fg: #f7f5f0;
+      --row-hover: #faf8f4;
+      --row-alt: #fdfcfa;
+      --tag-bg: #f0ede6;
+      --tag-fg: #5a5650;
+      --pill-active-bg: #c84b2f;
+      --pill-active-fg: #fff;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08);
+      --radius: 6px;
+      --radius-lg: 10px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      font-size: 15px;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--header-bg);
+      color: var(--header-fg);
+      padding: 2rem 2.5rem 1.5rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    header h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    header h1 span { color: var(--accent2); font-style: italic; }
+    header p {
+      font-size: 0.82rem;
+      color: #9a9590;
+      margin-top: 0.3rem;
+      font-weight: 300;
+    }
+    .header-actions { display: flex; gap: 0.6rem; align-items: center; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #3a3830;
+      color: #c8c4bc;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover { background: #2a2822; border-color: #5a5650; color: var(--header-fg); }
+    .btn-accent {
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      color: #fff;
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-accent:hover { background: #a83b22; }
+
+    /* CONTROLS BAR */
+    .controls-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .search-wrap {
+      position: relative;
+      flex: 0 0 260px;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.5rem 0.75rem 0.5rem 2rem;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      outline: none;
+      transition: border 0.15s;
+    }
+    .search-wrap input:focus { border-color: var(--accent); }
+    .search-wrap svg { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--ink3); }
+
+    .divider { width: 1px; height: 1.5rem; background: var(--border); }
+    .ctrl-label { font-size: 0.75rem; color: var(--ink3); font-weight: 500; white-space: nowrap; }
+
+    /* COLUMN TOGGLES */
+    .col-toggles { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .col-pill {
+      background: var(--tag-bg);
+      color: var(--tag-fg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.25rem 0.7rem;
+      font-size: 0.74rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .col-pill:hover { border-color: var(--border2); background: var(--surface2); }
+    .col-pill.active { background: var(--pill-active-bg); color: var(--pill-active-fg); border-color: var(--pill-active-bg); }
+    .col-pill.active:hover { background: #a83b22; }
+
+    /* ROW FILTER PILLS */
+    .filter-pills { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .filter-tag {
+      display: flex; align-items: center; gap: 0.35rem;
+      background: #fef3ee; color: var(--accent);
+      border: 1px solid #f5c8b4;
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+    .filter-tag span { font-size: 0.7rem; }
+
+    /* MAIN CONTENT */
+    .main { padding: 1.5rem 2.5rem 3rem; }
+    .stats-row { display: flex; gap: 1rem; margin-bottom: 1.2rem; align-items: center; }
+    .stat-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.35rem 0.8rem;
+      font-size: 0.76rem;
+      color: var(--ink2);
+    }
+    .stat-chip strong { color: var(--ink); font-weight: 500; }
+
+    /* TABLE WRAPPER */
+    .table-outer {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .table-scroll { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    thead tr {
+      background: var(--header-bg);
+      color: var(--header-fg);
+    }
+    thead th {
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+    thead th:hover { background: #2a2822; }
+    thead th .sort-icon { margin-left: 0.3rem; opacity: 0.4; font-size: 0.65rem; }
+    thead th.sorted .sort-icon { opacity: 1; color: var(--accent2); }
+    thead th.row-actions-col { cursor: default; width: 60px; }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    tbody tr:nth-child(even) { background: var(--row-alt); }
+    tbody tr:hover { background: var(--row-hover); }
+    tbody tr:last-child { border-bottom: none; }
+
+    tbody td {
+      padding: 0.7rem 1rem;
+      color: var(--ink);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    td.numeric { font-family: 'DM Mono', monospace; text-align: right; font-size: 0.8rem; }
+    td .badge {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+    .badge-green { background: #eaf7ee; color: #1a7a3c; border: 1px solid #b3e5c0; }
+    .badge-amber { background: #fef9ea; color: #8a5f00; border: 1px solid #f5d97a; }
+    .badge-red   { background: #fef0ee; color: #b83520; border: 1px solid #f5beb6; }
+    .badge-blue  { background: #eef4fe; color: #1a52a8; border: 1px solid #b3cdf5; }
+    .badge-gray  { background: var(--tag-bg); color: var(--ink2); border: 1px solid var(--border); }
+
+    .del-row-btn {
+      background: none;
+      border: none;
+      color: var(--ink3);
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 4px;
+      transition: all 0.12s;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .del-row-btn:hover { color: var(--accent); background: #fef0ee; }
+
+    /* TABLE FOOTER */
+    .table-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .pagination { display: flex; gap: 0.3rem; align-items: center; }
+    .page-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.3rem 0.65rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      color: var(--ink2);
+      font-family: 'DM Mono', monospace;
+      transition: all 0.12s;
+    }
+    .page-btn:hover { border-color: var(--border2); background: var(--bg); }
+    .page-btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .page-info { font-size: 0.76rem; color: var(--ink3); }
+    select.page-size {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.28rem 0.5rem;
+      font-size: 0.78rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink2);
+      cursor: pointer;
+    }
+
+    /* ADD ROW PANEL */
+    .add-row-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-top: 1.2rem;
+      box-shadow: var(--shadow);
+    }
+    .add-row-panel h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+      color: var(--ink2);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--ink3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+      font-family: 'DM Mono', monospace;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.45rem 0.7rem;
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      outline: none;
+      transition: border 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+    .form-actions { display: flex; gap: 0.6rem; margin-top: 1rem; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      width: 480px;
+      max-width: 90vw;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    }
+    .modal h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+    .modal p { font-size: 0.82rem; color: var(--ink2); margin-bottom: 1.2rem; }
+    .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+    /* UPLOAD ZONE */
+    .upload-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 1rem;
+    }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: #fef8f6; }
+    .upload-zone p { color: var(--ink3); font-size: 0.82rem; margin-top: 0.5rem; }
+    #file-input { display: none; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      background: var(--ink);
+      color: var(--header-fg);
+      padding: 0.65rem 1.2rem;
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      z-index: 999;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.2s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <h1>Data<span>Grid</span></h1>
+    <p>Dynamic table explorer — toggle columns, filter rows, import CSV</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn-ghost" onclick="openImport()">↑ Import CSV</button>
+    <button class="btn-ghost" onclick="exportCSV()">↓ Export CSV</button>
+    <button class="btn-ghost" onclick="toggleAddRow()">+ Add Row</button>
+    <button class="btn-accent" onclick="openManageColumns()">⊞ Manage Columns</button>
+  </div>
+</header>
+
+<!-- CONTROLS BAR -->
+<div class="controls-bar">
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search-input" placeholder="Search all columns…" oninput="renderTable()"/>
+  </div>
+  <div class="divider"></div>
+  <span class="ctrl-label">Columns</span>
+  <div class="col-toggles" id="col-toggles"></div>
+  <div class="divider"></div>
+  <span class="ctrl-label">Per page</span>
+  <select class="page-size" id="page-size-select" onchange="currentPage=1;renderTable()">
+    <option value="10">10</option>
+    <option value="25" selected>25</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+</div>
+
+<!-- ACTIVE FILTERS -->
+<div style="padding: 0.5rem 2.5rem; background: var(--bg); display: flex; gap: 0.5rem; flex-wrap: wrap; min-height: 2.2rem;" id="active-filters"></div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="stats-row" id="stats-row"></div>
+
+  <div class="table-outer">
+    <div class="table-scroll">
+      <table id="data-table">
+        <thead id="table-head"></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <div class="page-info" id="page-info"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <!-- ADD ROW PANEL -->
+  <div class="add-row-panel" id="add-row-panel" style="display:none;">
+    <h3>Add new row</h3>
+    <div class="form-grid" id="add-row-form"></div>
+    <div class="form-actions">
+      <button class="btn-accent" onclick="submitNewRow()">Add row</button>
+      <button class="btn-ghost" onclick="toggleAddRow()" style="border-color:var(--border2);color:var(--ink2);">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div class="modal-overlay" id="import-modal">
+  <div class="modal">
+    <h2>Import CSV file</h2>
+    <p>Upload a CSV or paste raw CSV text below. The first row will be used as column headers.</p>
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()"
+      ondragover="event.preventDefault();this.classList.add('dragover')"
+      ondragleave="this.classList.remove('dragover')"
+      ondrop="handleDrop(event)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <p>Click to browse or drag & drop a .csv file</p>
+    </div>
+    <input type="file" id="file-input" accept=".csv" onchange="handleFileUpload(event)"/>
+    <p style="margin: 1rem 0 0.3rem; font-size:0.78rem; color:var(--ink3); text-transform:uppercase; letter-spacing:.05em; font-family:'DM Mono',monospace;">Or paste CSV</p>
+    <textarea id="csv-paste" style="width:100%;height:90px;border:1px solid var(--border2);border-radius:var(--radius);padding:.5rem;font-family:'DM Mono',monospace;font-size:.75rem;resize:vertical;background:var(--bg);color:var(--ink);outline:none;" placeholder="name,age,city&#10;Alice,30,NYC"></textarea>
+    <div class="modal-actions">
+      <button class="btn-ghost" style="border-color:var(--border2);color:var(--ink2);" onclick="closeImport()">Cancel</button>
+      <button class="btn-accent" onclick="importFromPaste()">Import</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE COLUMNS MODAL -->
+<div class="modal-overlay" id="col-modal">
+  <div class="modal">
+    <h2>Manage columns</h2>
+    <p>Drag to reorder. Toggle visibility with the checkboxes.</p>
+    <div id="col-manager-list" style="display:flex;flex-direction:column;gap:0.5rem;max-height:320px;overflow-y:auto;"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" style="border-color:var(--border2);color:var(--ink2);" onclick="document.getElementById('col-modal').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// SAMPLE DATA — replace with your real CSV import
+// ============================================================
+const SAMPLE_CSV = `ID,Product,Category,Revenue,Units Sold,Region,Status,Launch Date,Rating
+1,Apex Pro X1,Electronics,142500,950,North America,Active,2023-03-12,4.7
+2,BrewMaster 3000,Kitchen,67800,1420,Europe,Active,2022-11-05,4.5
+3,CloudDesk v2,Software,320000,850,Global,Active,2024-01-20,4.9
+4,DriftBoard 9,Sports,48900,320,Asia Pacific,Discontinued,2021-06-30,3.8
+5,EcoWrap Lite,Packaging,22300,5600,North America,Active,2023-08-14,4.2
+6,FusionLens 400,Photography,198000,440,Europe,Active,2024-02-28,4.8
+7,GreenTrace Pro,Software,88500,1100,Global,Beta,2024-04-10,4.3
+8,HydroKlean X,Home,31200,2800,North America,Active,2022-07-22,4.0
+9,InfraCore 7,Enterprise,512000,210,Global,Active,2023-10-01,4.6
+10,JetPack Mini,Travel,76400,680,Asia Pacific,Active,2023-05-18,4.4
+11,KinetiFlow 2,Fitness,29700,3300,Europe,Active,2022-12-09,4.1
+12,LuminAura S,Lighting,54600,1650,North America,Discontinued,2021-03-25,3.5
+13,MeshGuard Pro,Security,163000,720,Global,Active,2024-03-15,4.7
+14,NovaScan 100,Healthcare,285000,390,North America,Beta,2024-05-01,4.5
+15,OmniTrack GPS,Automotive,97200,810,Europe,Active,2023-09-27,4.3
+16,PulseCharge X,Electronics,119000,1240,Asia Pacific,Active,2024-01-08,4.6
+17,QuikPress 5,Kitchen,41300,2100,North America,Active,2022-08-30,3.9
+18,RoboVac Elite,Home,228000,960,Global,Active,2023-07-14,4.8
+19,SolarCell 12,Energy,374000,580,Europe,Active,2024-02-11,4.9
+20,TerraSense XL,Agriculture,56700,430,Asia Pacific,Beta,2024-04-22,4.2
+21,UltraGrip 3,Sports,18900,1820,North America,Active,2023-02-16,4.0
+22,VaultKey Pro,Security,142000,1050,Global,Active,2023-11-30,4.5
+23,WaveCast 4K,Media,89300,760,Europe,Active,2024-01-25,4.4
+24,XeroCell Nano,Electronics,67100,1380,Asia Pacific,Active,2023-06-08,4.2
+25,YieldMax AI,Software,431000,670,Global,Active,2024-03-28,4.8
+26,ZenPad Ultra,Tablets,178000,920,North America,Active,2024-02-02,4.6`;
+
+// ============================================================
+// STATE
+// ============================================================
+let allData = [];
+let columns = [];          // {key, label, visible, type}
+let sortCol = null;
+let sortDir = 'asc';
+let currentPage = 1;
+let searchQuery = '';
+let rowIdCounter = 1000;
+
+const NUMERIC_KEYS = new Set(['Revenue','Units Sold','Rating','ID']);
+const STATUS_COLORS = {
+  Active: 'badge-green', Discontinued: 'badge-red', Beta: 'badge-amber', Legacy: 'badge-gray'
+};
+
+// ============================================================
+// CSV PARSER
+// ============================================================
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const headers = lines[0].split(',').map(h => h.trim());
+  const rows = lines.slice(1).map(line => {
+    const vals = line.split(',');
+    const obj = { _id: ++rowIdCounter };
+    headers.forEach((h, i) => { obj[h] = (vals[i] || '').trim(); });
+    return obj;
+  }).filter(r => Object.values(r).some(v => v !== ''));
+  return { headers, rows };
+}
+
+function inferType(key, rows) {
+  if (NUMERIC_KEYS.has(key)) return 'number';
+  const sample = rows.slice(0,5).map(r => r[key]).filter(Boolean);
+  if (sample.every(v => !isNaN(Number(v)))) return 'number';
+  if (sample.every(v => /^\d{4}-\d{2}-\d{2}/.test(v))) return 'date';
+  return 'text';
+}
+
+function loadData(csvText) {
+  const { headers, rows } = parseCSV(csvText);
+  allData = rows;
+  columns = headers.map(h => ({
+    key: h, label: h, visible: true, type: inferType(h, rows)
+  }));
+  currentPage = 1;
+  sortCol = null;
+  renderAll();
+  showToast(`Loaded ${rows.length} rows, ${headers.length} columns`);
+}
+
+// ============================================================
+// FILTER + SORT
+// ============================================================
+function getFilteredData() {
+  let data = [...allData];
+  const q = document.getElementById('search-input')?.value.toLowerCase() || '';
+  if (q) {
+    data = data.filter(row =>
+      columns.some(c => String(row[c.key] || '').toLowerCase().includes(q))
+    );
+  }
+  if (sortCol) {
+    const col = columns.find(c => c.key === sortCol);
+    data.sort((a, b) => {
+      let av = a[sortCol], bv = b[sortCol];
+      if (col?.type === 'number') { av = parseFloat(av)||0; bv = parseFloat(bv)||0; }
+      else { av = String(av).toLowerCase(); bv = String(bv).toLowerCase(); }
+      return sortDir === 'asc' ? (av > bv ? 1 : -1) : (av < bv ? 1 : -1);
+    });
+  }
+  return data;
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+function renderAll() {
+  renderColToggles();
+  renderTable();
+  renderStats();
+}
+
+function renderColToggles() {
+  const wrap = document.getElementById('col-toggles');
+  wrap.innerHTML = columns.map(c => `
+    <div class="col-pill ${c.visible ? 'active' : ''}" onclick="toggleCol('${c.key}')">
+      ${c.label}
+    </div>`).join('');
+}
+
+function renderStats() {
+  const data = getFilteredData();
+  const visible = columns.filter(c => c.visible);
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-chip"><strong>${allData.length}</strong> total rows</div>
+    <div class="stat-chip"><strong>${data.length}</strong> matching</div>
+    <div class="stat-chip"><strong>${visible.length}</strong> of ${columns.length} columns shown</div>
+  `;
+}
+
+function renderTable() {
+  const visibleCols = columns.filter(c => c.visible);
+  const filtered = getFilteredData();
+  const pageSize = parseInt(document.getElementById('page-size-select')?.value || 25);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const pageData = filtered.slice((currentPage-1)*pageSize, currentPage*pageSize);
+
+  // Head
+  document.getElementById('table-head').innerHTML = `<tr>
+    ${visibleCols.map(c => `
+      <th class="${sortCol===c.key?'sorted':''}" onclick="setSort('${c.key}')">
+        ${c.label}
+        <span class="sort-icon">${sortCol===c.key?(sortDir==='asc'?'▲':'▼'):'⇅'}</span>
+      </th>`).join('')}
+    <th class="row-actions-col"></th>
+  </tr>`;
+
+  // Body
+  document.getElementById('table-body').innerHTML = pageData.length ? pageData.map(row => `
+    <tr>
+      ${visibleCols.map(c => `<td class="${c.type==='number'?'numeric':''}">${formatCell(c, row[c.key])}</td>`).join('')}
+      <td><button class="del-row-btn" onclick="deleteRow(${row._id})" title="Delete row">✕</button></td>
+    </tr>`).join('') : `<tr><td colspan="${visibleCols.length+1}" style="text-align:center;padding:2.5rem;color:var(--ink3);font-style:italic;">No rows match your search</td></tr>`;
+
+  // Pagination
+  document.getElementById('page-info').textContent = `${Math.min((currentPage-1)*pageSize+1,filtered.length)}–${Math.min(currentPage*pageSize,filtered.length)} of ${filtered.length}`;
+  const pag = document.getElementById('pagination');
+  let btns = '';
+  for (let p = 1; p <= totalPages; p++) {
+    if (totalPages > 7 && p > 2 && p < totalPages-1 && Math.abs(p-currentPage) > 1) {
+      if (p === 3 || p === totalPages-2) btns += `<span style="padding:0 0.2rem;color:var(--ink3);font-size:.8rem">…</span>`;
+    } else {
+      btns += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    }
+  }
+  pag.innerHTML = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>←</button>${btns}<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>→</button>`;
+
+  renderStats();
+}
+
+function formatCell(col, val) {
+  if (!val && val !== 0) return '<span style="color:var(--ink3)">—</span>';
+  if (col.key === 'Status') {
+    const cls = STATUS_COLORS[val] || 'badge-gray';
+    return `<span class="badge ${cls}">${val}</span>`;
+  }
+  if (col.key === 'Revenue') return '$' + Number(val).toLocaleString();
+  if (col.key === 'Rating') return '★ ' + val;
+  return val;
+}
+
+function toggleCol(key) {
+  const col = columns.find(c => c.key === key);
+  if (col) { col.visible = !col.visible; renderAll(); }
+}
+
+function setSort(key) {
+  if (sortCol === key) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortCol = key; sortDir = 'asc'; }
+  currentPage = 1;
+  renderTable();
+}
+
+function goPage(p) {
+  const filtered = getFilteredData();
+  const pageSize = parseInt(document.getElementById('page-size-select').value);
+  const total = Math.max(1, Math.ceil(filtered.length / pageSize));
+  currentPage = Math.max(1, Math.min(p, total));
+  renderTable();
+}
+
+function deleteRow(id) {
+  allData = allData.filter(r => r._id !== id);
+  renderTable();
+  showToast('Row deleted');
+}
+
+// ============================================================
+// ADD ROW
+// ============================================================
+function toggleAddRow() {
+  const panel = document.getElementById('add-row-panel');
+  const open = panel.style.display === 'none';
+  panel.style.display = open ? 'block' : 'none';
+  if (open) {
+    document.getElementById('add-row-form').innerHTML = columns.map(c => `
+      <div class="form-group">
+        <label>${c.label}</label>
+        <input type="${c.type==='number'?'number':'text'}" id="new-${c.key}" placeholder="${c.key}" />
+      </div>`).join('');
+  }
+}
+
+function submitNewRow() {
+  const row = { _id: ++rowIdCounter };
+  columns.forEach(c => {
+    row[c.key] = document.getElementById(`new-${c.key}`)?.value || '';
+  });
+  allData.unshift(row);
+  currentPage = 1;
+  renderTable();
+  toggleAddRow();
+  showToast('Row added');
+}
+
+// ============================================================
+// MANAGE COLUMNS MODAL
+// ============================================================
+function openManageColumns() {
+  document.getElementById('col-modal').classList.add('open');
+  renderColManager();
+}
+
+function renderColManager() {
+  document.getElementById('col-manager-list').innerHTML = columns.map((c, i) => `
+    <div style="display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);cursor:grab;" draggable="true">
+      <span style="color:var(--ink3);font-size:.9rem">⠿</span>
+      <input type="checkbox" ${c.visible?'checked':''} onchange="toggleCol('${c.key}');renderColManager();" style="cursor:pointer;width:15px;height:15px;" />
+      <span style="font-size:.82rem;flex:1">${c.label}</span>
+      <span style="font-size:.7rem;color:var(--ink3);font-family:'DM Mono',monospace;">${c.type}</span>
+    </div>`).join('');
+}
+
+// ============================================================
+// IMPORT / EXPORT
+// ============================================================
+function openImport() { document.getElementById('import-modal').classList.add('open'); }
+function closeImport() { document.getElementById('import-modal').classList.remove('open'); }
+
+function handleFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { loadData(ev.target.result); closeImport(); };
+  reader.readAsText(file);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { loadData(ev.target.result); closeImport(); };
+  reader.readAsText(file);
+}
+
+function importFromPaste() {
+  const text = document.getElementById('csv-paste').value.trim();
+  if (text) { loadData(text); closeImport(); }
+}
+
+function exportCSV() {
+  const visibleCols = columns.filter(c => c.visible);
+  const header = visibleCols.map(c => c.key).join(',');
+  const rows = getFilteredData().map(row => visibleCols.map(c => `"${row[c.key]||''}"`).join(','));
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'table-export.csv'; a.click();
+  showToast('CSV exported');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// CLOSE MODALS ON BACKDROP CLICK
+// ============================================================
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+});
+
+// ============================================================
+// INIT
+// ============================================================
+loadData(SAMPLE_CSV);
+</script>
+</body>
+</html>
