@@ -1,5 +1,5 @@
-# pillowcase
-Polysomnography Integrated Large-scale Library Of Waveforms ... Catalogued And Searchable Explorer
+# PillowCase
+### Polysomnography Integrated Large-scale Library Of Waveforms ... Catalogued And Searchable Explorer
 
 Wrapper for [https://github.com/mtec-TUB/pillow](https://github.com/mtec-TUB/pillow).
 
