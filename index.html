@@ -21,6 +21,7 @@
       flex-direction: column;
     }
 
+    /* ── NAV ── */
     nav {
       background: #fff;
       border-bottom: 1px solid #e2e4e9;
@@ -32,13 +33,8 @@
       flex-shrink: 0;
     }
     .nav-logo {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1a1a2e;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      font-size: 1rem; font-weight: 700; color: #1a1a2e;
+      letter-spacing: -0.02em; display: flex; align-items: center; gap: 0.4rem;
     }
     .nav-logo .dot { width: 8px; height: 8px; background: #0066ff; border-radius: 50%; }
     .nav-brand { display: flex; flex-direction: column; gap: 0.05rem; }
@@ -46,21 +42,54 @@
     .nav-spacer { flex: 1; }
     .nav-btn {
       display: flex; align-items: center; gap: 0.4rem;
-      padding: 0.4rem 0.85rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid #e2e4e9;
-      background: #fff;
-      color: #444;
-      transition: all 0.12s;
-      white-space: nowrap;
+      padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.8rem;
+      font-weight: 500; cursor: pointer; border: 1px solid #e2e4e9;
+      background: #fff; color: #444; transition: all 0.12s; white-space: nowrap;
     }
     .nav-btn:hover { background: #f4f5f7; border-color: #ccc; }
     .nav-btn.primary { background: #0066ff; color: #fff; border-color: #0066ff; }
     .nav-btn.primary:hover { background: #0052d4; }
 
+    /* ── TABS ── */
+    .tab-bar {
+      background: #fff;
+      border-bottom: 1px solid #e2e4e9;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: flex-end;
+      gap: 0;
+      flex-shrink: 0;
+      height: 40px;
+    }
+    .tab {
+      padding: 0 1.1rem 0 1.1rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: #6b7280;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.12s;
+      user-select: none;
+      gap: 0.4rem;
+    }
+    .tab.active { color: #0066ff; border-bottom-color: #0066ff; }
+    .tab:hover:not(.active) { color: #374151; background: #f9fafb; }
+    .tab svg { flex-shrink: 0; }
+
+    /* ── PANES ── */
+    .pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .pane.hidden { display: none; }
+
+    /* ── TOOLBAR ── */
     .toolbar {
       background: #fff;
       border-bottom: 1px solid #e2e4e9;
@@ -73,11 +102,8 @@
     }
     .search-box {
       display: flex; align-items: center; gap: 0.4rem;
-      border: 1px solid #e2e4e9;
-      border-radius: 6px;
-      padding: 0.38rem 0.7rem;
-      background: #f9fafb;
-      flex: 0 0 240px;
+      border: 1px solid #e2e4e9; border-radius: 6px;
+      padding: 0.38rem 0.7rem; background: #f9fafb; flex: 0 0 240px;
     }
     .search-box svg { color: #9ca3af; flex-shrink: 0; }
     .search-box input { border: none; background: transparent; outline: none; font-size: 0.82rem; color: #1a1a2e; width: 100%; }
@@ -85,48 +111,50 @@
     .col-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
     .col-chip {
       display: flex; align-items: center; gap: 0.3rem;
-      padding: 0.28rem 0.65rem;
-      border-radius: 20px;
-      border: 1px solid #e2e4e9;
-      font-size: 0.74rem;
-      cursor: pointer;
-      background: #f9fafb;
-      color: #555;
-      transition: all 0.12s;
+      padding: 0.28rem 0.65rem; border-radius: 20px;
+      border: 1px solid #e2e4e9; font-size: 0.74rem;
+      cursor: pointer; background: #f9fafb; color: #555; transition: all 0.12s;
     }
     .col-chip.on { background: #e8f0ff; border-color: #0066ff55; color: #0052d4; font-weight: 500; }
     .stats-label { font-size: 0.75rem; color: #9ca3af; white-space: nowrap; }
     .stats-label strong { color: #1a1a2e; }
 
+    /* ── GRID WRAP ── */
     .grid-wrap {
-      flex: 1;
-      padding: 1rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      overflow: hidden;
+      flex: 1; padding: 1rem 1.5rem;
+      display: flex; flex-direction: column; gap: 0.75rem; overflow: hidden;
     }
-    #myGrid {
-      flex: 1;
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
+    .ag-grid-el {
+      flex: 1; width: 100%; border-radius: 10px; overflow: hidden;
       box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0 0 1px #e2e4e9;
     }
 
     .empty-state {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      color: #9ca3af;
-      border-radius: 10px;
-      border: 2px dashed #e2e4e9;
-      background: #fff;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem; color: #9ca3af; border-radius: 10px;
+      border: 2px dashed #e2e4e9; background: #fff;
     }
 
+
+    /* ── MODALITY CELL CHIPS ── */
+    .mod-cell-val {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 22px; height: 20px; border-radius: 4px;
+      font-size: 11px; font-weight: 600; line-height: 1;
+      padding: 0 4px;
+    }
+    .mod-cell-val.present { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .mod-cell-val.optional { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+
+    /* ── AVAILABILITY ICONS ── */
+    .avail-cell {
+      display: flex; align-items: center; gap: 0.4rem; height: 100%;
+    }
+    .avail-icon { flex-shrink: 0; display: flex; align-items: center; }
+    .avail-label { font-size: 0.78rem; color: #6b7280; }
+
+    /* ── MODALS ── */
     .overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.4); z-index: 200;
@@ -142,6 +170,7 @@
     .modal p { font-size: 0.82rem; color: #6b7280; margin-bottom: 1.2rem; }
     .modal-footer { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1.2rem; }
 
+    /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 1.2rem; right: 1.2rem;
       background: #1a1a2e; color: #fff;
@@ -152,6 +181,7 @@
     }
     .toast.show { opacity: 1; transform: translateY(0); }
 
+    /* ── AG-GRID THEME ── */
     .ag-theme-quartz {
       --ag-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --ag-font-size: 13px;
@@ -166,29 +196,26 @@
       --ag-header-height: 42px;
     }
 
+    /* Modalities grid: compact rows */
+    #modalitiesGrid.ag-theme-quartz {
+      --ag-row-height: 34px;
+      --ag-header-height: 38px;
+      --ag-cell-horizontal-padding: 8px;
+      --ag-font-size: 12px;
+    }
+
     .expand-icon {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      font-size: 14px;
-      color: #9ca3af;
-      transition: color 0.15s;
-      user-select: none;
+      cursor: pointer; display: flex; align-items: center;
+      justify-content: center; width: 100%; height: 100%;
+      font-size: 14px; color: #9ca3af; transition: color 0.15s; user-select: none;
     }
     .expand-icon:hover { color: #0066ff; }
-
-    /* Style child rows differently */
-    .child-row-cell {
-      color: #6b7280;
-      font-style: italic;
-    }
+    .child-row-cell { color: #6b7280; font-style: italic; }
   </style>
 </head>
 <body>
 
+<!-- ── NAV ─────────────────────────────────────── -->
 <nav>
   <div class="nav-logo">
     <div class="dot"></div>
@@ -198,31 +225,83 @@
     </div>
   </div>
   <div class="nav-spacer"></div>
-  <button class="nav-btn" id="export-btn" onclick="exportCSV()" style="display:none">Export</button>
-  <button class="nav-btn" id="row-mgr-btn" onclick="openRowManager()" style="display:none">Manage Rows</button>
-  <button class="nav-btn" id="col-mgr-btn" onclick="openColManager()" style="display:none">Manage Columns</button>
+  <button class="nav-btn" id="export-btn"    onclick="exportCSV()"       style="display:none">Export</button>
+  <button class="nav-btn" id="row-mgr-btn"   onclick="openRowManager()"  style="display:none">Manage Rows</button>
+  <button class="nav-btn" id="col-mgr-btn"   onclick="openColManager()"  style="display:none">Manage Columns</button>
 </nav>
 
-<div class="toolbar" id="toolbar" style="display:none">
-  <div class="search-box">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="search-input" type="text" placeholder="Quick filter..." oninput="gridApi.setGridOption('quickFilterText', this.value)"/>
+<!-- ── TABS ─────────────────────────────────────── -->
+<div class="tab-bar">
+  <div class="tab active" id="tab-overview" onclick="switchTab('overview')">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+    </svg>
+    Overview
   </div>
-  <div class="tool-sep"></div>
-  <div class="col-chips" id="col-chips"></div>
-  <div class="tool-sep"></div>
-  <div class="stats-label" id="stats-label">Loading…</div>
+  <div class="tab" id="tab-modalities" onclick="switchTab('modalities')">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+    </svg>
+    Modalities
+  </div>
 </div>
 
-<div class="grid-wrap">
-  <div class="empty-state" id="empty-state">
-    <p>Loading Datasets_Catalogue.csv…</p>
+<!-- ══════════════════════════════════════════════ -->
+<!-- PANE 1: OVERVIEW                              -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="pane" id="pane-overview">
+  <div class="toolbar" id="toolbar" style="display:none">
+    <div class="search-box">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="search-input" type="text" placeholder="Quick filter…"
+             oninput="gridApi.setGridOption('quickFilterText', this.value)"/>
+    </div>
+    <div class="tool-sep"></div>
+    <div class="col-chips" id="col-chips"></div>
+    <div class="tool-sep"></div>
+    <div class="stats-label" id="stats-label">Loading…</div>
   </div>
-  <div id="myGrid" class="ag-theme-quartz" style="display:none;"></div>
+
+  <div class="grid-wrap">
+    <div class="empty-state" id="empty-state">
+      <p>Loading Datasets_Catalogue.csv…</p>
+    </div>
+    <div id="myGrid" class="ag-grid-el ag-theme-quartz" style="display:none;"></div>
+  </div>
 </div>
 
+<!-- ══════════════════════════════════════════════ -->
+<!-- PANE 2: MODALITIES                            -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="pane hidden" id="pane-modalities">
+  <div class="toolbar" id="mod-toolbar">
+    <div class="search-box">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input id="mod-search-input" type="text" placeholder="Filter datasets…"
+             oninput="if(modGridApi) modGridApi.setGridOption('quickFilterText', this.value)"/>
+    </div>
+    <div class="tool-sep"></div>
+    <div class="stats-label" id="mod-stats-label">Loading…</div>
+  </div>
+
+
+  <div class="grid-wrap">
+    <div class="empty-state" id="mod-empty-state">
+      <p>Loading Datasets_Modalities.csv…</p>
+    </div>
+    <div id="modalitiesGrid" class="ag-grid-el ag-theme-quartz" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ── TOAST ─────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
 
+<!-- ── MODALS ────────────────────────────────────── -->
 <div class="overlay" id="col-overlay">
   <div class="modal">
     <h2>Manage Columns</h2>
@@ -247,21 +326,38 @@
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════════════ -->
 <script>
+
 // ── STATE ─────────────────────────────────────────────────
 let gridApi;
+let modGridApi;
 let columnDefs = [];
 let rowIdCounter = 1000;
 let currentHeaders = [];
 let removedRows = [];
-let hierarchyMap = new Map(); // key: parentDatasetName -> { master, children[] }
+let hierarchyMap = new Map();
 let expandedDatasets = new Set();
+let activeTab = 'overview';
+let accessColName = null; // column whose values are "public" / "upon request"
+
+// ── TAB SWITCHING ──────────────────────────────────────────
+function switchTab(name) {
+  activeTab = name;
+  ['overview', 'modalities'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === name);
+    document.getElementById(`pane-${t}`).classList.toggle('hidden', t !== name);
+  });
+  if (name === 'modalities' && !modGridApi) {
+    autoLoadModalitiesCSV();
+  }
+}
 
 // ── CSV PARSER ────────────────────────────────────────────
 function detectDelimiter(text) {
   const firstLine = text.split(/\r?\n/)[0];
   const semicolons = (firstLine.match(/;/g) || []).length;
-  const commas = (firstLine.match(/,/g) || []).length;
+  const commas     = (firstLine.match(/,/g) || []).length;
   return semicolons >= commas ? ';' : ',';
 }
 
@@ -298,9 +394,20 @@ function parseCSV(text) {
   }
   if (buf.trim()) rawLines.push(buf);
 
-  const headers = splitLine(rawLines[0], delim);
+  // Detect two-row header: row 0 has empty first cell → it's a group-name row
+  let groupRow  = null;
+  let headerIdx = 0;
+  if (rawLines.length > 1) {
+    const row0 = splitLine(rawLines[0], delim);
+    if (row0[0].trim() === '') {
+      groupRow  = row0;
+      headerIdx = 1;
+    }
+  }
+
+  const headers = splitLine(rawLines[headerIdx], delim);
   const rows = [];
-  for (let i = 1; i < rawLines.length; i++) {
+  for (let i = headerIdx + 1; i < rawLines.length; i++) {
     const vals = splitLine(rawLines[i], delim);
     const row = { _rowId: ++rowIdCounter };
     let hasData = false;
@@ -311,116 +418,189 @@ function parseCSV(text) {
     });
     if (hasData) rows.push(row);
   }
-  return { headers, rows };
+  return { headers, rows, groupRow };
+}
+
+// ── AVAILABILITY ICONS ─────────────────────────────────────
+const ICON_PUBLIC = `
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:block">
+    <circle cx="8" cy="8" r="6.5" stroke="#22c55e" stroke-width="1.4" fill="#dcfce7"/>
+    <ellipse cx="8" cy="8" rx="2.8" ry="6.5" stroke="#22c55e" stroke-width="1.1" fill="none"/>
+    <line x1="1.5" y1="8" x2="14.5" y2="8" stroke="#22c55e" stroke-width="1.1"/>
+    <line x1="2.3" y1="5.2" x2="13.7" y2="5.2" stroke="#22c55e" stroke-width="0.9"/>
+    <line x1="2.3" y1="10.8" x2="13.7" y2="10.8" stroke="#22c55e" stroke-width="0.9"/>
+  </svg>`;
+
+const ICON_UPON_REQUEST = `
+  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:block">
+    <rect x="2.5" y="7.5" width="11" height="7" rx="1.5" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.4"/>
+    <path d="M5 7.5V5.5a3 3 0 016 0v2" stroke="#f59e0b" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="8" cy="11" r="1" fill="#f59e0b"/>
+  </svg>`;
+
+function accessIcon(value) {
+  const v = (value || '').toString().trim().toLowerCase();
+  if (v === 'public')                           return { svg: ICON_PUBLIC,       title: 'Publicly available' };
+  if (v === 'upon request' || v === 'on request') return { svg: ICON_UPON_REQUEST, title: 'Available upon request' };
+  return null;
+}
+
+// ── DATASET CELL RENDERER (name + access icon) ─────────────
+function datasetCellRenderer(params) {
+  const name = params.value ?? '';
+  const icon = accessColName ? accessIcon(params.data[accessColName]) : null;
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;align-items:center;gap:6px;height:100%;';
+
+  const label = document.createElement('span');
+  label.textContent = name;
+  wrap.appendChild(label);
+
+  if (icon) {
+    const tip = document.createElement('span');
+    tip.title = icon.title;
+    tip.style.cssText = 'display:flex;align-items:center;flex-shrink:0;';
+    tip.innerHTML = icon.svg;
+    wrap.appendChild(tip);
+  }
+
+  return wrap;
 }
 
 // ── DATA PROCESSING ────────────────────────────────────────
 function loadData(csvText) {
-  const { headers, rows } = parseCSV(csvText);
+  const { headers, rows, groupRow } = parseCSV(csvText);
 
-  // Exclude internal columns from display
-  currentHeaders = headers.filter(h => h !== 'level');
+  // Detect the access/availability column (values: "public" / "upon request")
+  accessColName = headers.find(h => /^access$|^availability$/i.test(h.trim())) || null;
+  // Also try heuristic: any column where most non-empty values match the known strings
+  if (!accessColName) {
+    accessColName = headers.find(h => {
+      const vals = rows.map(r => (r[h] || '').trim().toLowerCase()).filter(Boolean);
+      return vals.length > 0 && vals.every(v => v === 'public' || v === 'upon request' || v === 'on request');
+    }) || null;
+  }
 
-  // ── FIX: Build hierarchy by tracking the last-seen level-1 parent ──
+  currentHeaders = headers.filter(h => h !== 'level' && h !== accessColName);
+
   hierarchyMap.clear();
   let lastParentName = null;
 
   rows.forEach(row => {
     const level = parseInt(row['level'] || '1');
-    const name = row['Dataset'];
-
+    const name  = row['Dataset'];
     if (level === 1) {
-      // This is a master/parent row
-      if (!name) return; // skip rows with no dataset name
+      if (!name) return;
       lastParentName = name;
       hierarchyMap.set(name, { master: row, children: [] });
     } else {
-      // This is a child row — attach to the last-seen parent
       if (lastParentName && hierarchyMap.has(lastParentName)) {
-        // Tag child rows so we can style them
-        row._isChild = true;
+        row._isChild    = true;
         row._parentName = lastParentName;
         hierarchyMap.get(lastParentName).children.push(row);
       }
     }
   });
 
-  // Initial display: only level-1 master rows
-  const initialRows = Array.from(hierarchyMap.values())
-    .map(h => h.master)
-    .filter(Boolean);
+  const initialRows = Array.from(hierarchyMap.values()).map(h => h.master).filter(Boolean);
+  columnDefs = buildColDefs(currentHeaders, groupRow, headers);
 
-  columnDefs = buildColDefs(currentHeaders);
-
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('myGrid').style.display = '';
-  document.getElementById('toolbar').style.display = '';
-  document.getElementById('export-btn').style.display = '';
-  document.getElementById('row-mgr-btn').style.display = '';
-  document.getElementById('col-mgr-btn').style.display = '';
+  document.getElementById('empty-state').style.display    = 'none';
+  document.getElementById('myGrid').style.display         = '';
+  document.getElementById('toolbar').style.display        = '';
+  document.getElementById('export-btn').style.display     = '';
+  document.getElementById('row-mgr-btn').style.display    = '';
+  document.getElementById('col-mgr-btn').style.display    = '';
 
   initGrid(currentHeaders, initialRows);
 }
 
-function buildColDefs(headers) {
+function buildColDefs(headers, groupRow, allHeaders) {
   const expandColDef = {
-    headerName: '',
-    field: '_expand',
-    width: 44,
-    minWidth: 44,
-    maxWidth: 44,
-    sortable: false,
-    filter: false,
-    resizable: false,
+    headerName: '', field: '_expand',
+    width: 44, minWidth: 44, maxWidth: 44,
+    sortable: false, filter: false, resizable: false,
     cellRenderer: params => {
-      if (params.data._isChild) return ''; // no expand arrow on children
-
+      if (params.data._isChild) return '';
       const entry = hierarchyMap.get(params.data['Dataset']);
-      if (!entry || entry.children.length === 0) return ''; // no children
-
+      if (!entry || entry.children.length === 0) return '';
       const isExpanded = expandedDatasets.has(params.data['Dataset']);
       const btn = document.createElement('div');
       btn.className = 'expand-icon';
-      btn.title = isExpanded ? 'Collapse' : `Expand (${entry.children.length} subgroups)`;
+      btn.title     = isExpanded ? 'Collapse' : `Expand (${entry.children.length} subgroups)`;
       btn.innerHTML = isExpanded ? '▾' : '▸';
-      btn.onclick = () => toggleExpansion(params.data['Dataset']);
+      btn.onclick   = () => toggleExpansion(params.data['Dataset']);
       return btn;
     }
   };
 
-  const dataCols = headers.map(h => {
+  // Helper: build a single leaf column def
+  const leafDef = h => {
     const isDataset = h === 'Dataset';
     return {
-      field: h,
-      headerName: h,
-      sortable: true,
-      filter: true,
-      resizable: true,
-      minWidth: isDataset ? 160 : 100,
+      field: h, headerName: h,
+      sortable: true, filter: true, resizable: true,
+      minWidth: isDataset ? 180 : 80,
       ...(isDataset ? { pinned: 'left' } : {}),
       cellClass: params => params.data._isChild ? 'child-row-cell' : '',
+      cellRenderer: isDataset ? datasetCellRenderer : undefined,
     };
+  };
+
+  // No group row → flat column list (original behaviour)
+  if (!groupRow) {
+    return [expandColDef, ...headers.map(leafDef), actionsColDef()];
+  }
+
+  // Two-row header: build column groups
+  // groupRow aligns with allHeaders (full, including 'level')
+  // Expand category names forward across empty cells
+  let currentCat = '';
+  const colCatMap = new Map(); // fieldName → categoryName
+  allHeaders.forEach((h, idx) => {
+    const cell = (groupRow[idx] || '').trim();
+    if (cell) currentCat = cell;
+    colCatMap.set(h, currentCat);
   });
 
-  return [expandColDef, ...dataCols, actionsColDef()];
+  const groupMap   = new Map(); // catName → [colDef]
+  const groupOrder = [];
+  const standalone = []; // columns with no category (before first group)
+
+  headers.forEach(h => {
+    const cat = colCatMap.get(h) || '';
+    const def = leafDef(h);
+    if (!cat || h === 'Dataset') {
+      standalone.push(def);
+    } else {
+      if (!groupMap.has(cat)) {
+        groupMap.set(cat, []);
+        groupOrder.push(cat);
+      }
+      groupMap.get(cat).push(def);
+    }
+  });
+
+  const groupedDefs = groupOrder.map(cat => ({
+    headerName: cat,
+    marryChildren: true,
+    children: groupMap.get(cat),
+  }));
+
+  return [expandColDef, ...standalone, ...groupedDefs, actionsColDef()];
 }
 
 function toggleExpansion(parentName) {
   const entry = hierarchyMap.get(parentName);
   if (!entry) return;
-
   if (expandedDatasets.has(parentName)) {
-    // Collapse: remove all children
     gridApi.applyTransaction({ remove: entry.children });
     expandedDatasets.delete(parentName);
   } else {
-    // Expand: insert children right after the parent row
-    // Find the index of the parent to insert after it
     let insertIndex = null;
     gridApi.forEachNode((node, idx) => {
-      if (node.data && node.data['Dataset'] === parentName) {
-        insertIndex = idx + 1;
-      }
+      if (node.data && node.data['Dataset'] === parentName) insertIndex = idx + 1;
     });
     gridApi.applyTransaction({
       add: entry.children,
@@ -428,26 +608,19 @@ function toggleExpansion(parentName) {
     });
     expandedDatasets.add(parentName);
   }
-
-  // Refresh expand column to flip arrow
   gridApi.refreshCells({ columns: ['_expand'], force: true });
   updateStats();
 }
 
 function actionsColDef() {
   return {
-    headerName: '',
-    field: '_actions',
-    width: 44,
-    minWidth: 44,
-    maxWidth: 44,
-    sortable: false,
-    filter: false,
-    resizable: false,
+    headerName: '', field: '_actions',
+    width: 44, minWidth: 44, maxWidth: 44,
+    sortable: false, filter: false, resizable: false,
     cellRenderer: params => {
-      const btn = document.createElement('button');
-      btn.innerHTML = '✕';
-      btn.title = 'Remove row';
+      const btn       = document.createElement('button');
+      btn.innerHTML   = '✕';
+      btn.title       = 'Remove row';
       btn.style.cssText = 'background:none;border:none;cursor:pointer;color:#d1d5db;font-size:12px;padding:0;line-height:1;';
       btn.onmouseenter = () => btn.style.color = '#ef4444';
       btn.onmouseleave = () => btn.style.color = '#d1d5db';
@@ -462,12 +635,45 @@ function actionsColDef() {
   };
 }
 
+// ── AUTO-SIZE HELPERS ─────────────────────────────────────
+// After autoSizeAllColumns, group-header widths depend on the sum of their
+// children.  This function measures each group's label text and, if the
+// children are collectively too narrow, distributes the extra width evenly.
+function ensureGroupHeadersFit(api, topLevelDefs) {
+  const canvas = document.createElement('canvas');
+  const ctx    = canvas.getContext('2d');
+  // Match ag-Grid Quartz header font (semi-bold, ~13 px)
+  ctx.font = '600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+  function leafFields(def) {
+    if (!def.children) return def.field ? [def.field] : [];
+    return def.children.flatMap(leafFields);
+  }
+
+  topLevelDefs.forEach(def => {
+    if (!def.children || !def.headerName) return;
+    const needed = ctx.measureText(def.headerName).width + 28; // 28px for cell padding
+    const leaves = leafFields(def);
+    const current = leaves.reduce((sum, f) => {
+      const col = api.getColumn(f);
+      return sum + (col ? col.getActualWidth() : 0);
+    }, 0);
+    if (needed > current) {
+      const extra = Math.ceil((needed - current) / leaves.length);
+      leaves.forEach(f => {
+        const col = api.getColumn(f);
+        if (col) api.setColumnWidths([{ key: f, newWidth: col.getActualWidth() + extra }]);
+      });
+    }
+  });
+}
+
 // ── GRID INIT ────────────────────────────────────────────
 function initGrid(headers, rows) {
-  const options = {
+  agGrid.createGrid(document.getElementById('myGrid'), {
     columnDefs,
     rowData: rows,
-    defaultColDef: { flex: 1, minWidth: 100 },
+    defaultColDef: { minWidth: 80 },
     animateRows: true,
     pagination: true,
     paginationPageSize: 25,
@@ -475,19 +681,21 @@ function initGrid(headers, rows) {
     getRowClass: params => params.data._isChild ? 'child-row' : '',
     onGridReady: params => {
       gridApi = params.api;
+      gridApi.autoSizeAllColumns(false);
+      ensureGroupHeadersFit(gridApi, columnDefs);
       renderChips(headers);
       updateStats();
     },
-    onFilterChanged: updateStats,
+    onFilterChanged:    updateStats,
     onPaginationChanged: updateStats,
-  };
-  agGrid.createGrid(document.getElementById('myGrid'), options);
+  });
 }
 
 function renderChips(headers) {
   const wrap = document.getElementById('col-chips');
   wrap.innerHTML = headers.map(h => `
-    <div class="col-chip on" id="chip-${CSS.escape(h)}" onclick="toggleColumn('${h.replace(/'/g, "\\'")}')">
+    <div class="col-chip on" id="chip-${CSS.escape(h)}"
+         onclick="toggleColumn('${h.replace(/'/g, "\\'")}')">
       ${h}
     </div>`).join('');
 }
@@ -507,9 +715,16 @@ function updateStats() {
   document.getElementById('stats-label').innerHTML = `<strong>${count}</strong> rows visible`;
 }
 
-// ── CSV LOAD ─────────────────────────────────────────────
+// ── OVERVIEW CSV LOAD ─────────────────────────────────────
 async function autoLoadCSV() {
-  const FALLBACK = `Dataset,level,year,subjects,recordings\r\nABC,1,2011,49,132\r\nABC_sub,2,2011,sub-group A,66\r\nABC_sub2,2,2011,sub-group B,66\r\nANPHY,1,2024,29,29\r\nAPOE,1,2003,712,712\r\nAPOE_A,2,2003,Age 18-40,356\r\nAPOE_B,2,2003,Age 41-90,356\r\n`;
+  const FALLBACK = [
+    `,,Demographics,,,,,,,Sleep-Disordered Breathing & Sleep Fragmentation,,,Patient-Reported Outcomes,,,,,,,,,,,,,,,,Sleep Architecture,,,,,,,,,,`,
+    `Dataset,level,year,subjects,recordings,scoring,age range,gender (m/f),BMI,AHI,ArI (arousals/h),PLM index (PLM/h),ESS,PHQ-8/PHQ-9,SF-36 (physical),SF-36 (mental),FSS,MEQ,GAD-7,FOSQ,ISI,PSQI,WHIIRS,SSS,STOP-BANG,SAQLI,Zung,BDI,TIB (min),TST  (min),SE (%),SOL (min),WASO (min),N1/S1 (%),N2/S2 (%),N3/(S3+S4) (%),REM (%),population,access`,
+    `ABC,1,2011-2014,49,132,AASM,27-65 (48.8±9.9),28/21,38.9±3.0,49.8±27.6,,,,,-,,,-,-,-,-,-,,,-,,,,-,484.2±55.6,373.7±77.5,77.7±15.0,21.5±23.6,83.4±59.8,19.8±13.2,50.9±9.5,11.5±8.7,17.8±7.2,severe OSA,upon request`,
+    `ANPHY,1,2024,29,29,AASM,32±6,16/13,<30,<= 15,-,-,-,-,,,-,-,-,-,-,,,-,,,,-,416.2±48.3,341.6±59.8,81.8±9.9,17.5±18.5,57.3±35.0,12.3±3.8,49.5±6.6,23.1±5.8,15.1±4.1,normal/healthy,available`,
+    `APOE,1,2003-2007,712,712,R&K,13-90 (45.7±13.6),421/291,27.3±7.0,-,,,-,-,,,-,-,-,-,-,,,-,,,,-,467.7±53.2,348.5±70.0,74.6±12.7,45.3±33.4,73.4±53.2,11.7±9.6,63.0±12.2,9.4±9.7,16.0±7.1,sleep disordered breathing,upon request`,
+    `APPLES,1,2003-2008,1516,1104,R&K,18-84 (50.1±12.9),958/558,32.1±7.8,38.2±26.6,24.9±19.1,8.2±17.5,-,-,,,-,55.5±11.9,-,-,-,,,2.8±1.4,,,,6.3±5.2,493.3±58.9,373.2±74.1,75.7±13.0,25.8±27.4,94.3±56.3,19.1±14.7,60.5±13.8,3.1±5.8,17.3±7.3,OSA,upon request`,
+  ].join('\r\n');
   try {
     const resp = await fetch('Datasets_Catalogue.csv');
     if (!resp.ok) throw new Error('not found');
@@ -523,6 +738,169 @@ function exportCSV() {
   gridApi.exportDataAsCsv({ fileName: 'pillowcase_export.csv' });
 }
 
+// ─────────────────────────────────────────────────────────
+// ── MODALITIES TAB ────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+
+async function autoLoadModalitiesCSV() {
+  const FALLBACK = [
+    `,Neurophysiology,,,Cardiology,,,,Respiratory Effort,,,,,Oxygenation,,,Body,,,,,Behavioural / Environmental,,Therapy,,`,
+    `Dataset,EEG,EOG,EMG chin,ECG,PPG (pulse oxi/pleth),HR,blood pressure,Nasal pressure,Thermistor/airflow,RIP belts (abd/tho),Esophageal pressure / Pes,snore vibration sensor,SpO2,EtCO2/TcCO2,Oximetry-derived indices,EMG leg/arms,body core temperature,actigraphy,accelerometers,position,Audio,Light,PAP pressure,Leak,Flow from device`,
+    `ABC,6,2,2,1,2,1,,1,1,3,,1,1,,1,2,,,,2,,1,1,,1`,
+    `ANPHY,83,4,1,1,,,,,,,,,,,,2,,,,,,1,,,`,
+    `APOE,6,2,1,1,,1,,(1),(1),2,1,1,1,1,,2,,,,1,1,1,1,(1),(1)`,
+    `APPLES,4,2,1,1,,1,,1,1,2,,1,1,,,1,,,,,,,,, `,
+    `BESTAIR,,,,1,2,,,1,1,4,,1,1,,,,,1,,(1),,,,,(1)`,
+    `BOAS,8,1,1,,,3,,,(1),(2),,,1,,,,,,6,,,,,, `,
+    `CAPSLPDB,5,1,1,1,1,1,,1,,(2),,,1,,,2,,,,(1),(1),,,, `,
+    `CCSHS,2,2,2,2,1,2,,1,1,3,,1,1,,1,2,,,,1,,1,,, `,
+    `CFS,2,2,2,1,(1),1,,1,1,2,,1,1,,1,2,,,,1,,(1),,,`,
+  ].join('\n');
+
+  try {
+    const resp = await fetch('Datasets_Modalities.csv');
+    if (!resp.ok) throw new Error('not found');
+    loadModalitiesData(await resp.text());
+  } catch {
+    loadModalitiesData(FALLBACK);
+  }
+}
+
+function parseModalitiesCSV(text) {
+  const lines = text.split(/\r?\n/).filter(l => l.trim() !== '');
+
+  // Row 0: category group names (empty cells = same group as previous)
+  // Row 1: sub-column names (first cell = "Dataset")
+  // Row 2+: data
+  const catRow = splitLine(lines[0], ',');
+  const subRow = splitLine(lines[1], ',');
+
+  // Expand category names across empty cells
+  let currentCat = '';
+  const colCategories = catRow.map(cell => {
+    if (cell.trim()) currentCat = cell.trim();
+    return currentCat;
+  });
+
+  const dataRows = [];
+  for (let i = 2; i < lines.length; i++) {
+    const vals = splitLine(lines[i], ',');
+    const rowName = vals[0];
+    if (!rowName) continue;
+    const row = { _rowId: ++rowIdCounter };
+    subRow.forEach((h, idx) => {
+      if (!h) return;
+      row[h] = vals[idx] !== undefined ? vals[idx].trim() : '';
+    });
+    dataRows.push(row);
+  }
+
+  return { catRow, subRow, colCategories, dataRows };
+}
+
+function buildModalityColDefs(subRow, colCategories) {
+  // Build groups: category → [column fields]
+  const groupMap   = new Map(); // catName → [colDef]
+  const groupOrder = [];
+
+  subRow.forEach((colName, idx) => {
+    if (idx === 0) return; // skip "Dataset" index — handled as pinned col
+    if (!colName) return;
+    const cat = colCategories[idx] || 'Other';
+
+    if (!groupMap.has(cat)) {
+      groupMap.set(cat, []);
+      groupOrder.push(cat);
+    }
+
+    groupMap.get(cat).push({
+      field: colName,
+      headerName: colName,
+      width: 80,
+      minWidth: 60,
+      maxWidth: 120,
+      sortable: true,
+      filter: false,
+      resizable: true,
+      cellRenderer: modalityCellRenderer,
+      headerTooltip: colName,
+    });
+  });
+
+  const pinnedDataset = {
+    field: 'Dataset',
+    headerName: 'Dataset',
+    pinned: 'left',
+    width: 130,
+    minWidth: 100,
+    sortable: true,
+    filter: true,
+    resizable: true,
+    cellStyle: { fontWeight: '600', color: '#1a1a2e' },
+  };
+
+  const groupColDefs = groupOrder.map(cat => ({
+    headerName: cat,
+    marryChildren: true,
+    children: groupMap.get(cat),
+  }));
+
+  return [pinnedDataset, ...groupColDefs];
+}
+
+function modalityCellRenderer(params) {
+  const raw = (params.value || '').toString().trim();
+  if (!raw) {
+    // Empty — show subtle dash
+    const span = document.createElement('span');
+    span.style.cssText = 'color:#d1d5db;font-size:10px;';
+    span.textContent = '–';
+    return span;
+  }
+
+  const isOptional = raw.startsWith('(') && raw.endsWith(')');
+  const chip = document.createElement('div');
+  chip.className = `mod-cell-val ${isOptional ? 'optional' : 'present'}`;
+  chip.textContent = raw;
+  chip.title = isOptional
+    ? `${raw} – optional / conditional`
+    : `${raw} channel${raw !== '1' ? 's' : ''}`;
+  return chip;
+}
+
+function loadModalitiesData(csvText) {
+  const { subRow, colCategories, dataRows } = parseModalitiesCSV(csvText);
+  const colDefs = buildModalityColDefs(subRow, colCategories);
+
+  document.getElementById('mod-empty-state').style.display = 'none';
+  document.getElementById('modalitiesGrid').style.display  = '';
+
+  agGrid.createGrid(document.getElementById('modalitiesGrid'), {
+    columnDefs: colDefs,
+    rowData: dataRows,
+    defaultColDef: { minWidth: 60 },
+    animateRows: true,
+    pagination: true,
+    paginationPageSize: 30,
+    getRowId: p => String(p.data._rowId),
+    onGridReady: params => {
+      modGridApi = params.api;
+      modGridApi.autoSizeAllColumns(false);
+      ensureGroupHeadersFit(modGridApi, colDefs);
+      updateModStats();
+    },
+    onFilterChanged:    updateModStats,
+    onPaginationChanged: updateModStats,
+  });
+}
+
+function updateModStats() {
+  if (!modGridApi) return;
+  const count = modGridApi.getDisplayedRowCount();
+  document.getElementById('mod-stats-label').innerHTML = `<strong>${count}</strong> datasets`;
+}
+
+// ── SHARED UTILS ──────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -532,12 +910,15 @@ function showToast(msg) {
 // ── MODALS ────────────────────────────────────────────────
 function openColManager() {
   const list = document.getElementById('col-manager-list');
-  const cols = gridApi.getColumns().filter(c => !['_actions','_expand'].includes(c.getColId()));
+  const cols  = gridApi.getColumns().filter(c => !['_actions','_expand'].includes(c.getColId()));
   list.innerHTML = cols.map(col => {
     const id = col.getColId();
     const visible = col.isVisible();
-    return `<label style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0.4rem;font-size:0.8rem;cursor:pointer;border-radius:4px;" onmouseenter="this.style.background='#f4f5f7'" onmouseleave="this.style.background=''">
-      <input type="checkbox" ${visible ? 'checked' : ''} onchange="gridApi.setColumnsVisible(['${id}'], this.checked); document.getElementById('chip-${CSS.escape(id)}')?.classList.toggle('on', this.checked)"> ${id}
+    return `<label style="display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0.4rem;font-size:0.8rem;cursor:pointer;border-radius:4px;"
+              onmouseenter="this.style.background='#f4f5f7'" onmouseleave="this.style.background=''">
+      <input type="checkbox" ${visible ? 'checked' : ''}
+             onchange="gridApi.setColumnsVisible(['${id}'], this.checked);
+                       document.getElementById('chip-${CSS.escape(id)}')?.classList.toggle('on', this.checked)"> ${id}
     </label>`;
   }).join('');
   document.getElementById('col-overlay').classList.add('open');
