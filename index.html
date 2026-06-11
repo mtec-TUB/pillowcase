@@ -770,7 +770,7 @@ function initGrid(headers, rows) {
     defaultColDef: { minWidth: 80 },
     animateRows: true,
     pagination: true,
-    paginationPageSize: 25,
+    paginationPageSize: 50,
     getRowId: p => String(p.data._rowId),
     getRowClass: params => params.data._isChild ? 'child-row' : '',
     onGridReady: params => {
@@ -972,10 +972,10 @@ function loadModalitiesData(csvText) {
   agGrid.createGrid(document.getElementById('modalitiesGrid'), {
     columnDefs: colDefs,
     rowData: dataRows,
-    defaultColDef: { minWidth: 60 },
+    defaultColDef: { minWidth: 40 },
     animateRows: true,
     pagination: true,
-    paginationPageSize: 30,
+    paginationPageSize: 50,
     getRowId: p => String(p.data._rowId),
     onGridReady: params => {
       modGridApi = params.api;
