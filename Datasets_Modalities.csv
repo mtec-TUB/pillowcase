@@ -1,5 +1,5 @@
 ,Neurophysiology,,,Cardiology,,,,Respiratory Effort,,,,,Oxygenation,,,Body,,,,,Behavioural / Environmental,,Therapy,,
-Dataset,EEG,EOG,EMG chin,ECG,PPG (pulse oxi/pleth),HR,blood pressure,Nasal pressure,Thermistor/airflow,RIP belts (abd/tho),Esophageal pressure / Pes (invasive respiratory effort),snore vibration sensor,SpO2,EtCO2/TcCO2,Oximetry-derived indices,EMG leg/arms,body core temperature,actigraphy,accelerometers,position,Audio,Light,PAP pressure,Leak,Flow from device
+Dataset,EEG,EOG,EMG chin,ECG,PPG (pulse oxi/pleth),HR,blood pressure,Nasal pressure,Thermistor/airflow,RIP belts (abd/tho),Esophageal pressure / Pes (invasive respiratory effort),snore,SpO2,EtCO2/TcCO2,Oximetry-derived indices,EMG leg/arms,body core temperature,actigraphy,accelerometers,position,Audio,Light,PAP pressure,Leak,Flow from device
 ABC,6,2,2,1,2,1,,1,1,3,,1,1,,1,2,,,,2,,1,1,,1
 ANPHY,83,4,1,1,,,,,,,,,,,,2,,,,,,1,,,
 APOE,6,2,1,1,,1,,(1),(1),2,1,1,1,1,,2,,,,1,1,1,1,(1),(1)
@@ -9,17 +9,18 @@ BOAS,8,1 (2),1,,,3,,,(1),(2),,,1,,,,,,6,,,,,,
 CAPSLPDB,5,1,1,1,1,1,,1,,(2),,,1,,,2,,,,(1),(1),,,,
 CCSHS,2,2,2,2,1,2,,1,1,3,,1,1,,1,2,,,,1,,1,,,
 CFS,2,2,2,1,(1),1,,1,1,2,,1,1,,1,2,,,,1,,(1),,,
-CHAT,,,,,,,,,,,,,,,,,,,,,,,,,
+CHAT,8 (17),4,3 (4),3 (4),1,2,,1,1,3,,1 (2),1,2 (3),,2 (4),,,(2),1 (2),,(1),(1),(1),(1)
 CPS,4,2,2,1,1,1,,1,1,3,,2,1,,,2,,1,,1,,1,,,
-DCSM,,,,,,,,,,,,,,,,,,,,,,,,,
+DCSM,6,2,1,1,,,,1,,2,,1,1,,,2,,,,,,,,,
 DOD-H,12,2,1,1,,,,,,,,,,,,,,,,,,,,,
 DOD-O,8,2,1,1,,,,,,,,,,,,,,,,,,,,,
-DREAMT,,,,,,,,,,,,,,,,,,,,,,,,,
+DREAMT,6,2,1,1,,1,1,,2,2,,1,1,,,2,1,,3,,,,,,
 EESM17,20,2,1,,,,,,,,,,,,,,,,,,,1,,,
 EESM19,12 (18),1 (2),(2),,,,,,,,,,,,,,,,,,,1,,,
 EESM23,5  (11),(2),(2),,,,,,,,,,,,,,,,,,,1,,,
 FDCSR,6 (8),2,1,1,,,,,,,,,,,,,,,,,,1,,,
 HEARTBEAT,,,,1,2,1,,(1),(1),(2),,1,2,,1,,,1,3,1,,,,,
+HFO,,,,,,,,,,,,,,,,,,,,,,,,,
 HMC,4,2,1,1,,,,,,,,,,,,,,,,,,1,,,
 HomePAP,6 (7),2,(2),1 (3),1,2,,1,1,2,,1,1,(1),(3),2,,(1),(3),1,,,(1),(1),1
 ISRUC,6,2,1,2,,,,,2,2,,1,1,,,2,,,,1,,1,,,
@@ -32,7 +33,8 @@ MWT,2,2,,,,,,,,,,,,,,,,,,,,,,,
 NCHSDB,7,2,1,1,1,,,1,2 (4),2,,1 (2),1,2 (3),1,1 (2),,,,1,,1,1,,2
 Physio2018,6,1,1,1,,,,,1,2,,,1,,,,,,,,,,,,
 PSG-IPA,3,2,1,1,,,,1,,2,,,1,,,,,,,,,,,,
-REDS,,,,,,,,,,,,,,,,,,,,,,,,,
+REDS,61,,,,,,,,,,,,,,,,,,,,,,,,
+Rodrigues2017,18,,,,,,,,,,,,,,,,,,,,,,,,
 SEF,30,1,1,,,,,,,,,,,,,,,,,,,,,,
 SIEFERT2024,63,,2,,,,,,,,,,,,,,,,,,,,,,
 SLEEPBRL,,,,,,,,,,,,,,,,,,,,,,,,,
