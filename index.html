@@ -345,7 +345,7 @@
 <div id="pop-overlay" onclick="closePopover()">
   <div id="pop-box" onclick="event.stopPropagation()">
     <button id="pop-box-close" onclick="closePopover()">✕</button>
-    <div id="pop-box-title">Population</div>
+<!--    <div id="pop-box-title">Population</div>-->
     <div id="pop-box-body"></div>
   </div>
 </div>
@@ -499,30 +499,81 @@ function accessIcon(value) {
 }
 
 // ── POPULATION POPOVER ─────────────────────────────────────
-function openPopover(triggerEl, datasetName, populationText) {
+function openPopover(triggerEl, datasetName, data) {
   const body = document.getElementById('pop-box-body');
   const box  = document.getElementById('pop-box');
-  body.textContent = populationText || '—';
+  body.innerHTML = ''; // Clear previous content
 
-  // Position near the trigger element
+  // Helper to create a section with a title and content
+  const createSection = (title, contentHtml) => {
+    if (!contentHtml) return;
+    const div = document.createElement('div');
+    div.style.cssText = 'margin-bottom: 12px;';
+    div.innerHTML = `
+      <div style="font-size:0.65rem; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">${title}</div>
+      <div style="line-height:1.4;">${contentHtml}</div>
+    `;
+    body.appendChild(div);
+  };
+
+  // 1. Population Section
+  const popText = data[populationColName] ;
+  createSection('Population', `<div>${popText}</div>`);
+
+  // Helper to parse strings into a list of clickable links with line breaks
+  const parseLinks = (rawString) => {
+    if (!rawString || rawString === '-' || rawString.trim() === '') return null;
+
+    // Split by comma and clean up whitespace/quotes
+    const parts = rawString.split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
+
+    const linksHtml = parts
+      .filter(part => part && part !== '-') // Remove empty entries or dashes
+      .map(part => {
+        let href = part;
+        // Check if it's a DOI
+        if (part.startsWith('10.')) {
+          href = `https://doi.org/${part}`;
+        }
+        // If it doesn't look like a URL, try to prepend https
+        else if (!part.startsWith('http')) {
+          href = `https://${part}`;
+        }
+
+        return `<a href="${href}" target="_blank" style="color:#0066ff; text-decoration:none;" onmousedown="event.stopPropagation()">${part}</a>`;
+      })
+      .join('<br>'); // <--- CHANGE: Use <br> to create a new line for every link
+
+    return linksHtml || null;
+  };
+
+  // 2. Key Reference Section
+  const refLinks = parseLinks(data['key reference']);
+  if (refLinks) createSection('Key Reference', refLinks);
+
+  // 3. Repo Source Section
+  const repoLinks = parseLinks(data['repo source']);
+  if (repoLinks) createSection('Repo Source', repoLinks);
+
+  // --- Position logic remains the same ---
   const rect = triggerEl.getBoundingClientRect();
   const vw = window.innerWidth, vh = window.innerHeight;
   box.style.top = ''; box.style.bottom = '';
   box.style.left = ''; box.style.right = '';
 
-  // Prefer showing below; flip up if near bottom
   const spaceBelow = vh - rect.bottom;
-  if (spaceBelow >= 120) {
+  if (spaceBelow >= 150) {
     box.style.top = (rect.bottom + 6) + 'px';
   } else {
     box.style.bottom = (vh - rect.top + 6) + 'px';
   }
-  // Align left edge with trigger; clamp so it doesn't overflow right
   const left = Math.min(rect.left, vw - 340);
   box.style.left = Math.max(8, left) + 'px';
 
   document.getElementById('pop-overlay').classList.add('open');
 }
+
+
 
 function closePopover() {
   document.getElementById('pop-overlay').classList.remove('open');
@@ -532,20 +583,33 @@ function closePopover() {
 function datasetCellRenderer(params) {
   const name = params.value ?? '';
   const icon = accessColName ? accessIcon(params.data[accessColName]) : null;
-  const popText = populationColName ? (params.data[populationColName] || '') : '';
+
+  // Check all three potential information fields
+  const popText = populationColName ? (params.data[populationColName] || '').trim() : '';
+  const refText = (params.data['key reference'] || '').trim();
+  const repoText = (params.data['repo source'] || '').trim();
+
+  // A field is considered "empty" if it's just whitespace or a single dash '-'
+  const hasPop  = popText && popText !== '-';
+  const hasRef  = refText && refText !== '-';
+  const hasRepo = repoText && repoText !== '-';
 
   const wrap = document.createElement('div');
   wrap.style.cssText = 'display:flex;align-items:center;gap:6px;height:100%;';
 
   const label = document.createElement('span');
-  if (popText) {
+  label.textContent = name;
+
+  // If ANY of the fields have data, make it a clickable link
+  if (hasPop || hasRef || hasRepo) {
     label.className   = 'dataset-link';
-    label.textContent = name;
-    label.title       = 'Click to view population';
-    label.onclick     = e => { e.stopPropagation(); openPopover(label, name, popText); };
-  } else {
-    label.textContent = name;
+    label.title       = 'Click for more details'; // Changed from "view population" to be more accurate
+    label.onclick     = e => {
+      e.stopPropagation();
+      openPopover(label, name, params.data);
+    };
   }
+
   wrap.appendChild(label);
 
   if (icon) {
@@ -558,6 +622,8 @@ function datasetCellRenderer(params) {
 
   return wrap;
 }
+
+
 
 // ── DATA PROCESSING ────────────────────────────────────────
 function loadData(csvText) {
