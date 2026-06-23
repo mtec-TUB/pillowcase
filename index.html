@@ -642,7 +642,13 @@ function loadData(csvText) {
   // Detect the population column
   populationColName = headers.find(h => /^population$/i.test(h.trim())) || null;
 
-  currentHeaders = headers.filter(h => h !== 'level' && h !== accessColName && h !== populationColName);
+  currentHeaders = headers.filter(h =>
+    h !== 'level' &&
+    h !== accessColName &&
+    h !== populationColName &&
+    h !== 'key reference' && // Add this
+    h !== 'repo source'      // Add this
+  );
 
   hierarchyMap.clear();
   let lastParentName = null;
